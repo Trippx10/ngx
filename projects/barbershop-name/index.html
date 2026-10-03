@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Барбершоп name ПК</title>
+<meta name="description" content="NAME — барбершоп на Покровке. Лохматым вход разрешён.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=JetBrains+Mono:wght@400;600&family=Onest:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div id="loader" aria-hidden="true">
+  <div class="ld-in">
+    <div class="ld-mascot" data-chubik data-style="shaggy" data-seed="4" data-notrack></div>
+    <div class="ld-word">name</div>
+    <div class="ld-bar"><i id="ldBar"></i></div>
+    <div class="ld-txt">Причёсываем сайт · <span id="ldN">0</span>%</div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <a href="#top" class="logo" aria-label="name, наверх">
+    <span class="logo-mark" data-chubik data-style="shaggy" data-seed="4"></span><span>name</span>
+  </a>
+  <nav class="menu" id="menu" aria-label="Разделы">
+    <span class="blob" aria-hidden="true"></span>
+    <a href="#uslugi"><span data-t="Услуги">Услуги</span></a>
+    <a href="#mastera"><span data-t="Мастера">Мастера</span></a>
+    <a href="#raboty"><span data-t="Работы">Работы</span></a>
+    <a href="#pochemu"><span data-t="Почему мы">Почему мы</span></a>
+    <a href="#otzyvy"><span data-t="Отзывы">Отзывы</span></a>
+    <a href="#kontakty"><span data-t="Контакты">Контакты</span></a>
+  </nav>
+  <div class="nav-r">
+    <button class="btn btn-sm magnetic js-book nav-book" data-peek>Записаться</button>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mmenu"><i></i><i></i></button>
+  </div>
+</header>
+
+<div class="mmenu" id="mmenu">
+  <nav aria-label="Мобильное меню">
+    <a href="#uslugi" style="--i:0">Услуги <sup>9 позиций</sup></a>
+    <a href="#mastera" style="--i:1">Мастера <sup>4 человека</sup></a>
+    <a href="#raboty" style="--i:2">Работы <sup>до / после</sup></a>
+    <a href="#pochemu" style="--i:3">Почему мы <sup>и кофе</sup></a>
+    <a href="#otzyvy" style="--i:4">Отзывы <sup>листай</sup></a>
+    <a href="#kontakty" style="--i:5">Контакты <sup>Покровка</sup></a>
+  </nav>
+  <div class="mm-foot">
+    <div style="display:grid;gap:14px">
+      <button class="btn btn-dark js-book">Записаться</button>
+      <button class="btn btn-dark js-game" style="--bg:transparent;--fg:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(18,16,25,.3)">Поиграть</button>
+      <p>Покровка, 17 · 10:00–22:00</p>
+    </div>
+    <div class="mm-buddy on-pink" data-chubik data-style="curly" data-mood="happy" data-seed="9"></div>
+  </div>
+</div>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<section class="hero" id="hero">
+  <canvas id="hairfield" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="hero-tag" id="heroTag"><span class="dot"></span><span id="heroTagTxt">Барбершоп на Покровке · с 2016 года</span></p>
+    <h1 class="h1" aria-label="Лохматым вход разрешён.">
+      <span class="ln" aria-hidden="true"><span class="fit-t" data-fit>Лохматым</span></span>
+      <span class="ln ln2">
+        <span class="mirror" id="mirror">
+          <svg class="mirror-ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="ringp" d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0"/></defs><text><textPath href="#ringp" textLength="560" lengthAdjust="spacing">ЖМИ НА ЧУБИКА · ОН ХОЧЕТ НОВУЮ ПРИЧЁСКУ · ЖМИ НА ЧУБИКА · </textPath></text></svg>
+          <button class="mirror-disc" id="mirrorBtn" data-cursor="подстричь" type="button" aria-label="Подстричь Чубика"><span class="mirror-buddy breath" id="mirrorBuddy" data-chubik data-style="shaggy" data-seed="4"></span></button>
+          <span class="mirror-cap" id="mirrorCap" aria-live="polite">причёска: лохматый</span>
+          <span class="snipfx" id="snipfx" aria-hidden="true"><svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><circle cx="34" cy="120" r="18"/><circle cx="34" cy="40" r="18"/><path d="M50 108 L150 70"/><path d="M50 52 L150 90"/></svg></span>
+        </span>
+        <span class="fit-t" data-fit data-fit-rest aria-hidden="true">вход</span>
+      </span>
+      <span class="ln ln3" aria-hidden="true"><span class="fit-t" data-fit>разрешён.</span></span>
+    </h1>
+    <div class="hero-foot">
+      <div>
+        <p class="hero-sub">Приходи как есть. Уйдёшь как задумано.</p>
+      </div>
+      <div class="hero-act">
+        <button class="btn btn-lg magnetic js-book" data-peek>Записаться <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn btn-ghost btn-lg magnetic js-game">Поиграть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="15.5" cy="11.5" r="1" fill="currentColor"/><circle cx="18" cy="13.5" r="1" fill="currentColor"/></svg></button>
+        <ul class="meta"><li>Покровка, 17</li><li>ежедневно 10–22</li><li>от 1 600 ₽</li></ul>
+      </div>
+    </div>
+  </div>
+  <div class="tapes" aria-hidden="true">
+    <div class="tape t2"><div class="tape-track" data-tape="Без записи не стоим в очереди|Кофе в кресле|Пластинки вместо радио|Горячее полотенце|Насадки от 0,5 мм"></div></div>
+    <div class="tape t1"><div class="tape-track" data-tape="Фейд|Кроп|Борода|Маллет|Опасная бритва|Помпадур|Детская|Камуфляж седины"></div></div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="sec" id="uslugi" data-drop="Тут прайс. Я проверял: без сюрпризов.">
+  <div class="wrap">
+    <div class="svc-pc">
+      <aside class="svc-side">
+        <div><p class="eyebrow">Услуги и цены</p><h2 class="h2">Что мы делаем <em>с головами</em></h2></div>
+        <p class="lead">Цена фиксированная и не зависит от длины волос, количества вихров и того, кто стриг тебя в прошлый раз. Нажми на услугу, чтобы сразу записаться.</p>
+        <ul class="svc-facts"><li><b>9</b> услуг</li><li><b>от 1 600 ₽</b></li><li><b>40–100</b> мин</li></ul>
+        <div class="svc-side-cta">
+          <button class="btn btn-lg magnetic js-to-chair" data-peek data-cursor="в кресло">Записаться <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <div class="svc-buddy" data-chubik data-style="bowl" data-seed="2"></div>
+        </div>
+        <p class="kbd-note">Или нажми <kbd>З</kbd> в любом месте сайта</p>
+      </aside>
+      <div class="price" id="price">
+        <div class="pr" data-i="0"><div class="pr-main"><h3 class="pr-n">Короткая стрижка</h3><p class="pr-d">Фейд, кроп, базз-кат, андеркат. Машинка и ножницы, мытьё, укладка.</p></div><span class="pr-t">60 мин</span><b class="pr-p">2 400 ₽</b></div>
+        <div class="pr" data-i="1"><div class="pr-main"><h3 class="pr-n">Стрижка на длинные волосы</h3><p class="pr-d">Маллет, шэг, удлинённые стрижки до плеч. Работаем ножницами, форма без «ступенек».</p></div><span class="pr-t">75 мин</span><b class="pr-p">2 900 ₽</b></div>
+        <div class="pr" data-i="2"><div class="pr-main"><h3 class="pr-n">Классика ножницами</h3><p class="pr-d">Помпадур, британка, аккуратные деловые стрижки без машинки.</p></div><span class="pr-t">70 мин</span><b class="pr-p">2 700 ₽</b></div>
+        <div class="pr" data-i="3"><div class="pr-main"><h3 class="pr-n">Борода</h3><p class="pr-d">Форма под овал лица, контур опасной бритвой, горячее полотенце и масло.</p></div><span class="pr-t">45 мин</span><b class="pr-p">1 900 ₽</b></div>
+        <div class="pr" data-i="4"><div class="pr-main"><h3 class="pr-n">Комплекс</h3><p class="pr-d">Стрижка и борода у одного мастера, укладка, эспрессо в кресле.</p></div><span class="pr-t">90 мин</span><b class="pr-p">3 900 ₽</b></div>
+        <div class="pr" data-i="5"><div class="pr-main"><h3 class="pr-n">Детская</h3><p class="pr-d">До 12 лет. Тихая машинка, мультики и наклейка «Храбрец» в конце.</p></div><span class="pr-t">40 мин</span><b class="pr-p">1 600 ₽</b></div>
+        <div class="pr" data-i="6"><div class="pr-main"><h3 class="pr-n">Бритьё головы</h3><p class="pr-d">Опасная бритва, распаривание, горячее полотенце.</p></div><span class="pr-t">40 мин</span><b class="pr-p">2 200 ₽</b></div>
+        <div class="pr" data-i="7"><div class="pr-main"><h3 class="pr-n">Камуфляж седины</h3><p class="pr-d">Тонирование волос или бороды, выглядит естественно.</p></div><span class="pr-t">+20 мин</span><b class="pr-p">+900 ₽</b></div>
+        <div class="pr" data-i="8"><div class="pr-main"><h3 class="pr-n">Отец + сын</h3><p class="pr-d">Две стрижки подряд у одного мастера.</p></div><span class="pr-t">100 мин</span><b class="pr-p">3 600 ₽</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TEAM ================= -->
+<section class="sec" id="mastera" style="padding-top:0" data-drop="Это мои люди. Лев стриг меня первым.">
+  <div class="wrap">
+    <div class="sec-head rv-up">
+      <div><p class="eyebrow">Мастера</p><h2 class="h2">Четыре пары <em>ножниц</em></h2></div>
+      <p class="lead">У каждого своя специализация и свой характер. Наведи на мастера или нажми на карточку, чтобы узнать, к кому идти с твоей головой.</p>
+    </div>
+    <div class="team" id="team"></div>
+  </div>
+</section>
+
+<!-- ================= WORKS ================= -->
+<section class="sec" id="raboty" data-drop="Потяни ползунок, покажу, что было ДО.">
+  <div class="wrap">
+    <div class="sec-head rv-up">
+      <div><p class="eyebrow">Портфолио · до / после</p><h2 class="h2">Головы, которыми <em>гордимся</em></h2></div>
+      <p class="lead">Тяни ползунок: слева то, с чем человек пришёл, справа то, с чем ушёл. Листай работы стрелками или по миниатюрам.</p>
+    </div>
+    <div class="gal rv-up" id="gal">
+      <div class="ba gal-ba" id="galBa" tabindex="0" aria-label="Сравнение до и после, двигай стрелками">
+        <div class="before" id="galBefore"></div>
+        <div class="after" id="galAfter"></div>
+        <span class="ba-lbl l">ДО</span><span class="ba-lbl r">ПОСЛЕ</span>
+        <div class="ba-line"></div>
+        <div class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="gal-meta">
+        <p class="eyebrow" id="galNum" style="margin:0">Работа 01 / 05</p>
+        <h3 class="gal-title" id="galTitle"></h3>
+        <dl class="gal-dl" id="galDl"></dl>
+        <div class="gal-nav">
+          <button class="icon-btn" id="galPrev" aria-label="Предыдущая работа"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+          <button class="icon-btn" id="galNext" aria-label="Следующая работа"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <div class="gal-prog"><i id="galProg"></i></div>
+        </div>
+        <div class="gal-thumbs" id="galThumbs" role="tablist" aria-label="Работы"></div>
+        <button class="btn js-book" id="galBook" style="justify-self:start">Хочу так же <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY ================= -->
+<section class="sec" id="pochemu" style="padding-top:0" data-drop="Главное здесь пункт 04. Кофе.">
+  <div class="wrap">
+    <div class="sec-head rv-up">
+      <div><p class="eyebrow">Почему к нам</p><h2 class="h2">Четыре причины <em>вернуться</em></h2></div>
+      <p class="lead">Мы бы написали про «индивидуальный подход», но лучше покажем, из чего он состоит.</p>
+    </div>
+    <div class="why" id="why">
+      <div class="why-list" role="tablist" aria-label="Причины">
+        <button class="why-item on" role="tab" aria-selected="true" data-i="0"><span class="num">01</span><span class="ttl">Точность</span><i class="prog"></i></button>
+        <button class="why-item" role="tab" aria-selected="false" data-i="1"><span class="num">02</span><span class="ttl">Стиль</span><i class="prog"></i></button>
+        <button class="why-item" role="tab" aria-selected="false" data-i="2"><span class="num">03</span><span class="ttl">Атмосфера</span><i class="prog"></i></button>
+        <button class="why-item" role="tab" aria-selected="false" data-i="3"><span class="num">04</span><span class="ttl">Кофе</span><i class="prog"></i></button>
+      </div>
+      <div class="why-stage" id="whyStage">
+        <div class="why-buddy" id="whyBuddy" data-chubik data-style="hedgehog" data-seed="3"></div>
+        <div class="scene on" role="tabpanel">
+          <svg class="art" viewBox="0 0 400 400" aria-hidden="true">
+            <g class="spin" id="ticks"></g>
+            <circle cx="200" cy="200" r="104" fill="none" stroke="#ff5fa2" stroke-width="2" stroke-dasharray="4 8"/>
+            <path d="M200 60 V140 M200 260 V340 M60 200 H140 M260 200 H340" stroke="#eeeaf6" stroke-width="2" opacity=".5"/>
+            <g class="comb" opacity=".9"><rect x="150" y="286" width="100" height="16" rx="4" fill="#eeeaf6"/><path d="M156 302 v16 M166 302 v16 M176 302 v16 M186 302 v16 M196 302 v16 M206 302 v16 M216 302 v16 M226 302 v16 M236 302 v16 M244 302 v16" stroke="#eeeaf6" stroke-width="3"/></g>
+            <text x="200" y="214" text-anchor="middle" font-family="Dela Gothic One, Arial Black, sans-serif" font-size="64" fill="#eeeaf6">0,5</text>
+            <text x="200" y="244" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="3" fill="#a39cb6">МИЛЛИМЕТРА</text>
+          </svg>
+          <div class="scene-cap"><b>0,5 мм</b><p>Шаг насадок. Контур проверяем в двух зеркалах и при дневном свете, а не под жёлтой лампой.</p></div>
+        </div>
+        <div class="scene" role="tabpanel">
+          <svg class="art" viewBox="0 0 400 400" aria-hidden="true">
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#eeeaf6" stroke-opacity=".12" stroke-width="2"/>
+            <path d="M120 360 C 130 300, 170 290, 200 290 C 230 290, 270 300, 280 360 Z" fill="#342d45"/>
+            <rect x="182" y="240" width="36" height="56" fill="#b87a55"/>
+            <ellipse cx="200" cy="200" rx="58" ry="72" fill="#dda27c"/>
+            <path class="cyc" d="M142 190 C 136 120, 176 100, 204 102 C 240 104, 266 130, 258 190 C 250 160, 236 150, 200 148 C 166 148, 150 160, 142 190 Z" fill="#1a1622"/>
+            <path class="cyc" d="M144 180 C 134 110, 150 60, 206 54 C 256 50, 284 86, 262 128 C 262 150, 260 170, 258 186 C 248 150, 236 140, 214 136 C 180 134, 154 146, 144 180 Z" fill="#1a1622"/>
+            <path class="cyc" d="M188 150 C 184 96, 192 60, 200 44 C 208 60, 216 96, 212 150 Z" fill="#ff5fa2"/>
+            <circle cx="180" cy="205" r="4.5" fill="#121019"/><circle cx="220" cy="205" r="4.5" fill="#121019"/>
+            <path d="M186 246 q14 10 28 0" fill="none" stroke="#121019" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <div class="scene-cap"><b>15 мин</b><p>Столько длится разговор до стрижки. Сначала выясняем, как ты живёшь с волосами, потом берём ножницы.</p></div>
+        </div>
+        <div class="scene" role="tabpanel">
+          <svg class="art" viewBox="0 0 400 400" aria-hidden="true">
+            <g class="spinf"><circle cx="200" cy="200" r="150" fill="#0d0b12"/><g id="grooves"></g><circle cx="200" cy="200" r="50" fill="#ff5fa2"/><text x="200" y="198" text-anchor="middle" font-family="Dela Gothic One, sans-serif" font-size="22" fill="#121019">NAME</text><text x="200" y="218" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="2" fill="#121019">SIDE A · 33⅓</text><circle cx="200" cy="200" r="5" fill="#121019"/><path d="M110 120 A 125 125 0 0 1 180 78" stroke="#fff" stroke-opacity=".18" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+            <g class="arm"><circle cx="338" cy="70" r="16" fill="#342d45" stroke="#eeeaf6" stroke-width="2"/><path d="M338 70 L318 250 L290 280" fill="none" stroke="#eeeaf6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="274" y="272" width="26" height="16" rx="3" transform="rotate(-40 287 280)" fill="#eeeaf6"/></g>
+          </svg>
+          <div class="scene-cap"><b>412</b><p>Пластинок на полке. Музыку выбирает тот, кто сидит в кресле. Телевизора с футболом нет и не будет.</p></div>
+        </div>
+        <div class="scene" role="tabpanel">
+          <svg class="art" viewBox="0 0 400 400" aria-hidden="true">
+            <ellipse cx="200" cy="318" rx="120" ry="22" fill="#342d45"/>
+            <path d="M118 170 H282 V250 A 70 70 0 0 1 212 320 H188 A 70 70 0 0 1 118 250 Z" fill="#eeeaf6"/>
+            <path d="M282 196 h18 a30 30 0 0 1 0 60 h-22" fill="none" stroke="#eeeaf6" stroke-width="14"/>
+            <ellipse cx="200" cy="172" rx="82" ry="14" fill="#4a2f25"/>
+            <text x="200" y="262" text-anchor="middle" font-family="Dela Gothic One, sans-serif" font-size="30" fill="#ff5fa2">NAME</text>
+            <path class="steam" d="M168 150 C 156 128, 182 116, 168 92 C 156 72, 176 60, 168 44" fill="none" stroke="#eeeaf6" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+            <path class="steam" d="M200 150 C 188 128, 214 116, 200 92 C 188 72, 208 60, 200 44" fill="none" stroke="#eeeaf6" stroke-width="5" stroke-linecap="round" opacity=".6" style="animation-delay:-.5s"/>
+            <path class="steam" d="M232 150 C 220 128, 246 116, 232 92 C 220 72, 240 60, 232 44" fill="none" stroke="#eeeaf6" stroke-width="5" stroke-linecap="round" opacity=".6" style="animation-delay:-1s"/>
+          </svg>
+          <div class="scene-cap"><b>0 ₽</b><p>Эспрессо от обжарщика с соседней улицы. Бесплатно, пока ты в кресле, и ещё один с собой после комплекса.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section class="sec" id="otzyvy" style="padding-top:0" data-drop="Отзывы тяни мышкой. Или пальцем.">
+  <div class="wrap">
+    <div class="sec-head rv-up">
+      <div><p class="eyebrow">Отзывы · 4,9 из 5 по 1 280 оценкам</p><h2 class="h2">Говорят <em>после</em> зеркала</h2></div>
+      <div>
+        <p class="lead">Тяни карточки в сторону. Где-то между ними прячется один очень пушистый клиент.</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv-vp" id="rvVp" data-cursor="тяни"><div class="rv-track" id="rvTrack"></div></div>
+  <div class="wrap">
+    <div class="rv-ctrl">
+      <button class="icon-btn" id="rvPrev" aria-label="Предыдущий отзыв"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <button class="icon-btn" id="rvNext" aria-label="Следующий отзыв"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <div class="rv-bar"><i id="rvBar"></i></div>
+      <span class="rv-hint">drag →</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOCATION ================= -->
+<section class="sec" id="kontakty" style="padding-top:0" data-drop="7 минут от Китай-города. Я засекал.">
+  <div class="wrap">
+    <div class="sec-head rv-up">
+      <div><p class="eyebrow">Где мы</p><h2 class="h2">Найти нас <em>проще</em>, чем уложить вихор</h2></div>
+      <p class="lead">Вход со двора, розовая дверь, звонок не нужен. Карту можно двигать и приближать.</p>
+    </div>
+    <div class="loc">
+      <div class="loc-info">
+        <div>
+          <p class="loc-addr">Покровка, 17, стр. 1</p>
+          <p class="loc-sub">Москва · м. Китай-город, 7 мин пешком · м. Чистые пруды, 9 мин</p>
+        </div>
+        <span class="status" id="status"><i></i><span id="statusTxt">Открыто</span></span>
+        <div class="hours" id="hours">
+          <div data-d="1,2,3,4,5"><span>Пн–Пт</span><span>10:00–22:00</span></div>
+          <div data-d="6"><span>Суббота</span><span>10:00–22:00</span></div>
+          <div data-d="0"><span>Воскресенье</span><span>11:00–20:00</span></div>
+        </div>
+        <div class="loc-contacts">
+          <div><b>Телефон</b><br><a href="tel:+74950001717">+7 495 000-17-17</a></div>
+          <div><b>Telegram</b><br><a href="https://t.me/chub_barbershop" target="_blank" rel="noopener">@chub_barbershop</a></div>
+        </div>
+        <div class="loc-actions">
+          <a class="btn magnetic" id="routeBtn" href="https://yandex.ru/maps/?rtext=~55.759530,37.645720&amp;rtt=pd" target="_blank" rel="noopener">Показать маршрут <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <button class="btn btn-ghost js-copy" data-copy="Москва, ул. Покровка, 17, стр. 1">Скопировать адрес</button>
+        </div>
+      </div>
+      <div class="map" id="map" data-cursor="двигай" aria-label="Схема проезда к барбершопу">
+        <svg id="mapSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice"><g id="mapg"></g></svg>
+        <div class="map-ctrl">
+          <button id="zIn" aria-label="Приблизить">+</button>
+          <button id="zOut" aria-label="Отдалить">−</button>
+          <button id="zHome" aria-label="Вернуть к барбершопу"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+        </div>
+        <div class="map-tip" id="mapTip"></div>
+        <div class="map-leg"><span>NAME · Покровка, 17</span><span>- - маршрут от метро</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL ================= -->
+<section class="sec" id="final" style="padding-top:0">
+  <div class="wrap">
+    <div class="final-card rv-up">
+      <div>
+        <p class="eyebrow" style="color:var(--ink)">Запись онлайн · 30 секунд</p>
+        <h2 class="final-h">Хватит отращивать оправдания.</h2>
+        <p class="final-p" id="finalSlots">Кресло свободно сегодня вечером. Выбирай время, мастер уже точит ножницы.</p>
+      </div>
+      <div class="final-act">
+        <div class="final-buddy on-pink" id="finalBuddy" data-chubik data-style="shaggy" data-seed="8"></div>
+        <button class="round js-book" id="roundBtn" data-cursor="жми" aria-label="Записаться">
+          <svg class="ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="ring2" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><text><textPath href="#ring2" textLength="510" lengthAdjust="spacing">ЗАПИСАТЬСЯ · ЗАПИСАТЬСЯ · ЗАПИСАТЬСЯ · </textPath></text></svg>
+          <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>в кресло</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#top" class="logo" style="display:inline-flex"><span class="logo-mark" data-chubik data-style="shaggy" data-seed="4"></span><span>name</span></a>
+        <p style="color:var(--mute);margin-top:18px;max-width:34ch">Барбершоп для тех, кто зарос, передумал или просто давно не видел себя в зеркале.</p>
+      </div>
+      <div>
+        <h4>Адрес</h4>
+        <p>Москва, Покровка, 17, стр. 1<br>Вход со двора, розовая дверь</p>
+        <button class="copy js-copy" data-copy="Москва, ул. Покровка, 17, стр. 1">Скопировать адрес</button>
+      </div>
+      <div>
+        <h4>Часы и контакты</h4>
+        <p>Пн–Сб 10:00–22:00<br>Вс 11:00–20:00</p>
+        <p><a href="tel:+74950001717">+7 495 000-17-17</a><br><a href="mailto:hello@chub.barber">hello@chub.barber</a></p>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <div class="socials">
+          <a href="https://t.me/chub_barbershop" target="_blank" rel="noopener">Telegram</a>
+          <a href="https://vk.com/chub_barbershop" target="_blank" rel="noopener">VK</a>
+          <a href="https://www.youtube.com/@chub_barbershop" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </div>
+    <div class="bigword" aria-hidden="true">name
+      <div class="sleeper" id="sleeper" title="Кажется, он спит"><div data-chubik data-style="shaggy" data-mood="sleep" data-seed="4" data-notrack></div><span class="zz">z z</span></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 NAME · барбершоп на Покровке</span><span>Ни один волос не пострадал зря</span></div>
+  </div>
+</footer>
+
+<!-- ================= FLOATING ================= -->
+<button class="game-fab js-game" id="gameFab" aria-label="Открыть мини-игру"><span class="fab-face" data-chubik data-style="shaggy" data-seed="4"></span>Поиграть</button>
+
+<div class="buddy" id="buddy" aria-hidden="true">
+  <div class="buddy-rope"></div>
+  <div class="bubble" id="bubble"></div>
+  <div class="buddy-body" id="buddyBody"></div>
+</div>
+
+<div class="game" id="game" role="dialog" aria-label="Мини-игра «Помоги Чубику»" aria-hidden="true">
+  <div class="g-head">
+    <span class="g-title">Помоги Чубику</span>
+    <button class="g-x" id="gClose" aria-label="Закрыть игру"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="g-hud"><span>Очки <b id="gScore">0</b></span><span>Время <b id="gTime">25</b></span><span>Комбо <b id="gCombo">×1</b></span></div>
+  <div class="g-stage">
+    <canvas id="gcv" data-cursor-hide width="360" height="440"></canvas>
+    <div class="g-screen" id="gStart">
+      <div data-chubik data-style="shaggy" data-mood="happy" data-seed="4"></div>
+      <h4>Лови всё, что падает</h4>
+      <p>Двигай Чубика мышкой или пальцем. 25 секунд. Жвачку не лови: прилипнет.</p>
+      <div class="g-legend"><span>прядь +10</span><span>расчёска +25</span><span>золотые ножницы +100</span><span>жвачка −60</span></div>
+      <button class="btn" id="gGo">Старт</button>
+    </div>
+    <div class="g-screen" id="gOver" hidden>
+      <div id="gOverBuddy" data-chubik data-style="hedgehog" data-mood="happy" data-seed="5"></div>
+      <p style="font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)">Твой результат</p>
+      <div class="g-score" id="gFinal">0</div>
+      <p id="gPhrase"></p>
+      <p id="gBest" style="font:500 12px var(--mono);color:var(--mute)"></p>
+      <div class="g-btns"><button class="btn btn-sm" id="gAgain">Ещё раз</button><button class="btn btn-sm btn-ghost js-book">Записаться</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Работа крупно" aria-hidden="true">
+  <button class="icon-btn lb-x" id="lbX" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="lb-in">
+    <div class="ba" id="ba" tabindex="0" aria-label="Сравнение до и после, двигай стрелками">
+      <div class="before" id="baBefore"></div>
+      <div class="after" id="baAfter"></div>
+      <span class="ba-lbl l">ДО</span><span class="ba-lbl r">ПОСЛЕ</span>
+      <div class="ba-line"></div>
+      <div class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></div>
+    </div>
+    <div class="lb-meta">
+      <p class="eyebrow" id="lbEyebrow" style="margin:0">Работа</p>
+      <h3 id="lbTitle"></h3>
+      <dl id="lbDl"></dl>
+      <p class="lb-hint">Тяни ползунок. Стрелки ← → листают работы.</p>
+      <div class="lb-nav">
+        <button class="icon-btn" id="lbPrev" aria-label="Предыдущая работа"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+        <button class="icon-btn" id="lbNext" aria-label="Следующая работа"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <span class="lb-count" id="lbCount"></span>
+      </div>
+      <button class="btn js-book" id="lbBook" style="justify-self:start">Хочу так же</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="bkTitle" aria-hidden="true">
+  <div class="sheet">
+    <button class="g-x" id="bkX" aria-label="Закрыть запись"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div id="bkFormView">
+      <h3 id="bkTitle">Запись в кресло</h3>
+      <p class="sub">Выбери услугу, мастера и время. Подтвердим в Telegram или звонком в течение 10 минут.</p>
+      <form class="bk" id="bk" novalidate>
+        <fieldset><legend>Услуга</legend><div class="chips" id="bkSvc"></div></fieldset>
+        <fieldset><legend>Мастер</legend><div class="chips" id="bkMaster"></div></fieldset>
+        <fieldset><legend>День</legend><div class="chips" id="bkDay"></div></fieldset>
+        <fieldset><legend>Время</legend><div class="slots" id="bkTime"></div></fieldset>
+        <div class="row2">
+          <div class="field" id="fName"><label for="bkName">Имя</label><input id="bkName" name="name" autocomplete="given-name" placeholder="Как к тебе обращаться"><span class="msg"></span></div>
+          <div class="field" id="fPhone"><label for="bkPhone">Телефон</label><input id="bkPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"><span class="msg"></span></div>
+        </div>
+        <div class="bk-sum">
+          <p id="bkSum">Стрижка · любой мастер</p>
+          <button class="btn btn-dark" type="submit" id="bkSubmit"><span class="lbl">Записаться</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg><svg class="spin" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"><circle cx="44" cy="128" r="16"/><circle cx="116" cy="128" r="16"/><path d="M54 116 L132 22M106 116 L28 22"/></svg></button>
+        </div>
+      </form>
+    </div>
+    <div class="done-view" id="bkDone" hidden>
+      <div data-chubik data-style="curly" data-mood="happy" data-seed="9"></div>
+      <h3>Записал!</h3>
+      <p id="bkDoneTxt"></p>
+      <button class="btn btn-dark" id="bkOk">Отлично</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= PC EXTRAS ================= -->
+<nav class="rail" id="rail" aria-label="Навигация по разделам">
+  <i class="rail-line"><b id="railFill"></b></i>
+  <span class="rail-buddy" id="railBuddy" data-chubik data-style="shaggy" data-seed="4" data-notrack></span>
+</nav>
+<div class="kbd-hint" id="kbdHint"><kbd>З</kbd> запись <span>·</span> <kbd>И</kbd> игра <span>·</span> <kbd>Esc</kbd> закрыть</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

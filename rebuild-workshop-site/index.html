@@ -1,0 +1,1903 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rebuild Coloring Workshop</title>
+<meta name="description" content="Кузовной ремонт, покраска и восстановление автомобилей в Москве.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Yellowtail&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark paint-booth stage. Giant metal wordmark behind a car, then modular glass panels on a graphite floor.
+   One accent: masking-tape amber. Neutrals biased slightly cool (steel). */
+/* Workshop Rebuild & Coloring — brand palette taken from the project Forester:
+   bottle-green/black base, neon splatter accents (pink lead, cyan/lime/violet/yellow support). */
+:root{
+  --ink:#070c0b;--graphite:#0c1312;--steel:#111a18;--steel-2:#182321;--steel-3:#0f1715;
+  --line:rgba(190,235,220,.10);--line-2:rgba(190,235,220,.17);--line-3:rgba(190,235,220,.30);
+  --metal:#c3d0cb;--fg:#edf5f2;--fg-2:#c9d6d1;--mute:#8a9c96;--mute-2:#56665f;
+  --amber:#ff2d8a;--amber-2:#ff6cb0;--amber-ink:#1c0410;--amber-t:#ff4d9c;
+  --c-cyan:#1ec8ea;--c-lime:#9dff3b;--c-violet:#8a5cff;--c-yellow:#ffd23a;
+  --splash:linear-gradient(90deg,#ff2d8a,#8a5cff 45%,#1ec8ea);
+  --glass:rgba(14,22,20,.6);--ok:#5fd39a;--err:#ff6b6b;
+  --f-display:"Unbounded","Arial Black","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Manrope","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r-s:10px; --r-m:16px; --r-l:24px;
+  --ease:cubic-bezier(.16,.84,.24,1);
+  --well:#0a100f;--tint-1:rgba(220,255,240,.045);--tint-2:rgba(220,255,240,.09);
+  --nav-bg:rgba(7,12,11,.74);--menu-bg:rgba(5,9,8,.96);--chip-bg:rgba(10,16,15,.8);--ph:#ffb3d6;
+  --hero-1:#15221e;--hero-2:#0b1211;
+  --panel-a:#13201d;--panel-b:#0b1312;--panel-c:#1a2a26;--panel-d:#0f1816;
+  --booth:#eef8f5;--booth-shadow:0 0 24px 4px rgba(210,255,240,.32),0 0 80px 10px rgba(210,255,240,.10);
+  --wordmark:linear-gradient(180deg,#ffffff 0%,#d3e2dc 40%,#7b8c86 54%,#e6efeb 72%,#9aaba5 100%);
+  --wordmark-2:linear-gradient(180deg,#e6efeb,#5f706a);
+  --wm-glow:rgba(201,53,224,.28);
+  --shadow:rgba(0,0,0,.9);--splat-op:.2;
+  --map-bg:#070c0b;--map-city:#0d1614;--map-dot:rgba(220,255,240,.045);--map-street:rgba(220,255,240,.05);--map-road:#22302c;--map-river:#10303a;--map-river2:#1e6a80;--map-ring:rgba(195,215,208,.45);--map-label:#8a9c96;--map-park:rgba(157,255,59,.06);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--ink:#f2f5f3;--graphite:#e8eeeb;--steel:#fbfdfc;--steel-2:#ffffff;--steel-3:#eef3f0;
+  --line:rgba(10,30,24,.10);--line-2:rgba(10,30,24,.17);--line-3:rgba(10,30,24,.32);
+  --metal:#3f4d48;--fg:#0c1714;--fg-2:#2b3a35;--mute:#56665f;--mute-2:#95a39d;
+  --amber-t:#c80f66;--glass:rgba(255,255,255,.76);--well:#ffffff;
+  --tint-1:rgba(10,30,24,.04);--tint-2:rgba(10,30,24,.075);
+  --nav-bg:rgba(242,245,243,.82);--menu-bg:rgba(242,245,243,.97);--chip-bg:rgba(255,255,255,.88);--ph:#a8105a;
+  --hero-1:#ffffff;--hero-2:#eef3f0;
+  --panel-a:#ffffff;--panel-b:#f1f5f3;--panel-c:#ffffff;--panel-d:#f3f6f4;
+  --booth:#ffffff;--booth-shadow:0 2px 10px rgba(10,30,24,.2),0 0 40px 8px rgba(255,255,255,.9);
+  --wordmark:linear-gradient(180deg,#56645f 0%,#0f1a17 42%,#8e9d97 54%,#1d2a26 78%,#08100e 100%);
+  --wordmark-2:linear-gradient(180deg,#1d2a26,#95a39d);
+  --wm-glow:rgba(201,53,224,.2);
+  --shadow:rgba(10,30,24,.26);--splat-op:.16;
+  --map-bg:#e9eeec;--map-city:#f7faf8;--map-dot:rgba(10,30,24,.06);--map-street:rgba(10,30,24,.07);--map-road:#d2dbd7;--map-river:#b6dbe6;--map-river2:#5fb3cc;--map-ring:rgba(30,50,44,.45);--map-label:#56665f;--map-park:rgba(70,170,60,.13);
+  color-scheme:light;}}
+:root[data-theme="light"]{--ink:#f2f5f3;--graphite:#e8eeeb;--steel:#fbfdfc;--steel-2:#ffffff;--steel-3:#eef3f0;
+  --line:rgba(10,30,24,.10);--line-2:rgba(10,30,24,.17);--line-3:rgba(10,30,24,.32);
+  --metal:#3f4d48;--fg:#0c1714;--fg-2:#2b3a35;--mute:#56665f;--mute-2:#95a39d;
+  --amber-t:#c80f66;--glass:rgba(255,255,255,.76);--well:#ffffff;
+  --tint-1:rgba(10,30,24,.04);--tint-2:rgba(10,30,24,.075);
+  --nav-bg:rgba(242,245,243,.82);--menu-bg:rgba(242,245,243,.97);--chip-bg:rgba(255,255,255,.88);--ph:#a8105a;
+  --hero-1:#ffffff;--hero-2:#eef3f0;
+  --panel-a:#ffffff;--panel-b:#f1f5f3;--panel-c:#ffffff;--panel-d:#f3f6f4;
+  --booth:#ffffff;--booth-shadow:0 2px 10px rgba(10,30,24,.2),0 0 40px 8px rgba(255,255,255,.9);
+  --wordmark:linear-gradient(180deg,#56645f 0%,#0f1a17 42%,#8e9d97 54%,#1d2a26 78%,#08100e 100%);
+  --wordmark-2:linear-gradient(180deg,#1d2a26,#95a39d);
+  --wm-glow:rgba(201,53,224,.2);
+  --shadow:rgba(10,30,24,.26);--splat-op:.16;
+  --map-bg:#e9eeec;--map-city:#f7faf8;--map-dot:rgba(10,30,24,.06);--map-street:rgba(10,30,24,.07);--map-road:#d2dbd7;--map-river:#b6dbe6;--map-river2:#5fb3cc;--map-ring:rgba(30,50,44,.45);--map-label:#56665f;--map-park:rgba(70,170,60,.13);
+  color-scheme:light;}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;overflow-x:clip;background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1260px;margin-inline:auto;padding-inline:clamp(16px,4vw,44px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* grain + brushed metal */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* type */
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.02em}
+h2{font-size:clamp(30px,4.4vw,60px);font-weight:600;line-height:1.04}
+h3{font-size:clamp(17px,1.4vw,20px);font-weight:600;line-height:1.2;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--splash);border-radius:2px}
+.lead{font-size:clamp(17px,1.5vw,20px);color:var(--fg-2);max-width:34ch;line-height:1.5}
+.mono{font-family:var(--f-mono)}
+.note{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.04em;color:var(--mute)}
+.sec{position:relative;padding-block:clamp(72px,10vw,140px)}
+.sec-head{display:grid;gap:18px;margin-bottom:clamp(32px,4vw,56px);max-width:820px}
+.sec-head p{color:var(--mute);max-width:56ch}
+.amber{color:var(--amber-t)}
+
+/* buttons */
+.btn{--bg:var(--amber);--fgc:var(--amber-ink);position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;padding:0 26px;border-radius:14px;border:0;background:var(--bg);color:var(--fgc);font-weight:700;font-size:15.5px;letter-spacing:.01em;text-decoration:none;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.btn::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 48%,transparent 66%);transform:translateX(-110%);transition:transform .7s var(--ease)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px -12px rgba(201,53,224,.55)}
+.btn:hover::after{transform:translateX(110%)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn .arr{display:inline-block;transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+.btn-ghost{--bg:var(--tint-1);--fgc:var(--fg);border:1px solid var(--line-2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn-ghost:hover{box-shadow:none;border-color:var(--line-3);background:var(--tint-2)}
+.btn-ghost::after{background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.12) 48%,transparent 66%)}
+.btn-sm{min-height:44px;padding:0 18px;font-size:14px;border-radius:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-block{width:100%}
+
+/* glass */
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background .4s,border-color .4s,transform .4s var(--ease)}
+.nav.solid{background:var(--nav-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:24px;height:72px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.logo-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:linear-gradient(145deg,#e9edf1,#7e868f 60%,#d5dadf);color:#0b0c0e;font-family:var(--f-display);font-weight:800;font-size:17px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 6px 16px -6px rgba(0,0,0,.8)}
+.logo-t{font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.08em;line-height:1}
+.logo-t small{display:block;font-family:var(--f-mono);font-weight:400;font-size:9.5px;letter-spacing:.22em;color:var(--mute);margin-top:4px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{position:relative;padding:10px 12px;font-size:14px;color:var(--fg-2);text-decoration:none;border-radius:10px;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--fg);background:var(--tint-1)}
+.burger{display:none;width:48px;height:48px;border-radius:12px;border:1px solid var(--line-2);background:var(--tint-1);cursor:pointer;place-items:center}
+.burger span{display:block;width:18px;height:2px;background:var(--fg);border-radius:2px;box-shadow:0 6px 0 var(--fg),0 -6px 0 var(--fg)}
+.mmenu{position:fixed;inset:0;z-index:60;background:var(--menu-bg);backdrop-filter:blur(10px);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 88px) 24px 32px;gap:6px}
+.mmenu a{font-family:var(--f-display);font-size:28px;font-weight:600;text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
+.mmenu .btn{margin-top:20px;font-family:var(--f-body)}
+.mmenu-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;width:48px;height:48px;border-radius:12px;border:1px solid var(--line-2);background:transparent;font-size:22px;cursor:pointer}
+@media (max-width:960px){.nav-links,.nav .btn-sm{display:none}.burger{display:grid}}
+
+/* HERO */
+.hero{position:relative;padding-top:calc(env(safe-area-inset-top,0px) + 108px);padding-bottom:clamp(48px,7vw,96px);overflow:hidden;
+  background:radial-gradient(120% 70% at 50% 0%,var(--hero-1) 0%,var(--hero-2) 45%,var(--ink) 80%)}
+.booth{position:absolute;top:calc(env(safe-area-inset-top,0px) + 80px);left:50%;transform:translateX(-50%);display:flex;gap:clamp(14px,3vw,40px);width:min(1100px,92vw);justify-content:center;pointer-events:none}
+.booth i{flex:1;max-width:220px;height:5px;border-radius:5px;background:var(--booth);box-shadow:var(--booth-shadow);opacity:.85;animation:lightOn 1.1s steps(1,end) both;animation-delay:calc(var(--i)*.14s + .1s)}
+@keyframes lightOn{0%{opacity:0}30%{opacity:.7}40%{opacity:.1}55%{opacity:.85}100%{opacity:.85}}
+.hero-in{position:relative}
+.hero h1{position:relative;z-index:1;display:grid;justify-items:center;text-align:center;margin-top:clamp(18px,3vw,40px)}
+.h-rebuild{font-weight:800;font-size:clamp(64px,17.2vw,248px);line-height:.82;letter-spacing:-.045em;
+  background:var(--wordmark);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:typeIn 1.2s var(--ease) both}
+.h-sub{display:flex;align-items:center;gap:clamp(10px,2vw,22px);margin-top:clamp(10px,1.4vw,18px);font-family:var(--f-mono);font-weight:500;font-size:clamp(11px,1.35vw,17px);letter-spacing:.5em;color:var(--metal);padding-left:.5em;animation:typeIn 1.2s var(--ease) .15s both}
+.h-sub::before,.h-sub::after{content:"";width:clamp(24px,6vw,90px);height:1px;background:linear-gradient(90deg,transparent,var(--line-2))}
+.h-sub::after{transform:scaleX(-1)}
+@keyframes typeIn{from{opacity:0;transform:translateY(24px);letter-spacing:.02em}}
+.hero-car{position:relative;z-index:2;margin-top:clamp(-120px,-8.6vw,-40px);margin-inline:auto;max-width:1120px;will-change:transform}
+.hero-car svg{display:block;width:100%;height:auto;overflow:visible}
+.hero-car .carMove{animation:carIn 1.9s var(--ease) .25s both}
+.hero-car .rim{transform-box:fill-box;transform-origin:center;animation:spin 1.9s var(--ease) .25s both}
+.hero-car .sweep{animation:sweep 2.6s ease-in-out 1.6s both}
+.hero-car .hl{animation:hlOn 1s steps(1,end) 1.5s both}
+.hero-car .reflect{animation:fadeIn 1.6s ease 1s both}
+@keyframes carIn{from{transform:translateX(-420px);opacity:0}25%{opacity:1}to{transform:none;opacity:1}}
+@keyframes spin{from{transform:rotate(-1080deg)}to{transform:rotate(0)}}
+@keyframes sweep{from{transform:translateX(-200px)}to{transform:translateX(1300px)}}
+@keyframes hlOn{0%{opacity:.2}20%{opacity:1}30%{opacity:.3}45%{opacity:1}100%{opacity:1}}
+@keyframes fadeIn{from{opacity:0}}
+.hud{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;color:var(--fg-2);animation:fadeIn .8s ease 2.2s both}
+.hud b{color:var(--amber-t);font-weight:500;font-variant-numeric:tabular-nums}
+.hud .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(201,53,224,.18);animation:pulse 1.8s infinite}
+.hud-1{left:44%;top:46%}
+.hud-2{right:3%;top:24%}
+.hud-1::before{content:"";position:absolute;left:-46px;top:50%;width:46px;height:1px;background:linear-gradient(90deg,transparent,var(--amber))}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(201,53,224,0)}}
+.hero-bottom{position:relative;z-index:3;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,4vw,64px);align-items:end;margin-top:clamp(18px,3vw,36px)}
+.hero-bottom .lead{animation:typeIn 1s var(--ease) .9s both}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;animation:typeIn 1s var(--ease) 1.05s both}
+.tags{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);animation:fadeIn 1s ease 1.2s both}
+.tags li{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--fg-2)}
+.tags li:nth-child(odd){padding-right:14px}
+.tags li::before{content:"";flex:none;width:6px;height:6px;border-radius:1px;background:var(--metal);transform:rotate(45deg)}
+.tags li:first-child::before{background:var(--amber)}
+@media (max-width:820px){
+  .hero-bottom{grid-template-columns:1fr}
+  .hud-2{display:none}
+  .hud-1{display:none}
+  .actions .btn{flex:1 1 220px}
+}
+
+/* body line divider */
+.bodyline{display:block;width:100%;height:60px;margin-block:-30px;position:relative;z-index:2;pointer-events:none}
+.bodyline path{fill:none;stroke:url(#blGrad);stroke-width:1.2}
+
+/* reveal (only applied by JS to below-the-fold elements) */
+.r-pre{opacity:0;transform:translateY(28px)}
+.r-in{opacity:1;transform:none;transition:opacity .9s var(--ease) var(--d,0s),transform .9s var(--ease) var(--d,0s)}
+
+/* BEFORE / AFTER */
+#ba{background:linear-gradient(180deg,var(--ink),var(--graphite))}
+.ba-title{font-size:clamp(40px,7vw,100px);font-weight:800;letter-spacing:-.04em;display:flex;align-items:center;gap:.25em;line-height:1}
+.ba-title .arrow{color:var(--amber-t);font-weight:400;display:inline-block;animation:nudge 2.4s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(.12em)}}
+.ba-stage{position:relative;border-radius:var(--r-l);overflow:hidden;aspect-ratio:820/420;max-width:100%;background:var(--well);border:1px solid var(--line);user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.ba-layer{position:absolute;inset:0}
+.ba-layer svg,.ba-layer img,.case-thumb img,.tile img{width:100%;height:100%;display:block;object-fit:cover}
+.tile img{position:absolute;inset:0;transition:transform 1s var(--ease)}.tile:hover img{transform:scale(1.07)}
+.ba-after{clip-path:inset(0 0 0 var(--pos,50%))}
+.ba-handle{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;margin-left:-1px;background:linear-gradient(180deg,transparent,#fff 12%,#fff 88%,transparent);pointer-events:none;box-shadow:0 0 18px rgba(255,255,255,.4)}
+.ba-knob{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;display:grid;place-items:center;background:rgba(14,16,19,.7);border:1.5px solid #fff;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .25s var(--ease)}
+.ba-knob svg{width:26px;height:26px}
+.ba-stage:hover .ba-knob,.ba-stage.drag .ba-knob{transform:scale(1.1)}
+.ba-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none}
+.ba-range::-webkit-slider-thumb{-webkit-appearance:none;width:60px;height:400px}
+.ba-label{position:absolute;top:16px;padding:7px 12px;border-radius:999px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.16em;pointer-events:none}
+.ba-label.l{left:16px}.ba-label.r{right:16px;background:var(--amber);color:var(--amber-ink);border:0}
+.ba-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);padding:8px 14px;border-radius:999px;font-size:12.5px;color:#d7dbe0;pointer-events:none;transition:opacity .5s;white-space:nowrap}
+.ba-stage.touched .ba-hint{opacity:0}
+.ba-swap{transition:opacity .45s ease}
+.ba-swap.fading{opacity:0}
+.ba-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+.case{position:relative;text-align:left;padding:0;border-radius:var(--r-m);background:var(--steel);border:1px solid var(--line);cursor:pointer;overflow:hidden;transition:transform .45s var(--ease),border-color .3s,box-shadow .45s var(--ease)}
+.case:hover{transform:scale(1.025);box-shadow:0 30px 60px -30px var(--shadow);border-color:var(--line-2)}
+.case[aria-pressed="true"]{border-color:var(--amber)}
+.case[aria-pressed="true"] .case-num{background:var(--amber);color:var(--amber-ink)}
+.case-thumb{position:relative;aspect-ratio:820/420;overflow:hidden;background:var(--well)}
+.case-thumb svg{width:100%;height:100%;display:block;transition:transform .8s var(--ease)}
+.case:hover .case-thumb svg{transform:scale(1.06)}
+.case-num{position:absolute;top:12px;left:12px;font-family:var(--f-mono);font-size:11px;padding:5px 9px;border-radius:999px;background:rgba(10,11,13,.7);border:1px solid var(--line-2);transition:background .3s,color .3s}
+.case-body{padding:18px 18px 20px;display:grid;gap:12px}
+.case dl{margin:0;display:grid;gap:8px}
+.case dl div{display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:13.5px}
+.case dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding-top:2px}
+.case dd{margin:0;color:var(--fg-2)}
+@media (max-width:960px){.ba-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.ba-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1*clamp(16px,4vw,44px));padding-inline:clamp(16px,4vw,44px);padding-bottom:8px;scrollbar-width:none}.ba-grid::-webkit-scrollbar{display:none}.case{flex:0 0 82%;scroll-snap-align:center}.case:hover{transform:none}.ba-label{top:10px;font-size:10.5px}.ba-label.l{left:10px}.ba-label.r{right:10px}.ba-knob{width:46px;height:46px;margin:-23px 0 0 -23px}.ba-hint{display:none}}
+
+/* CALCULATOR */
+#calc{background:var(--graphite)}
+.calc{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(16px,2.4vw,28px);padding:clamp(14px,2vw,24px);border-radius:28px;background:linear-gradient(160deg,var(--panel-a),var(--panel-b));border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 40px 80px -40px var(--shadow)}
+.calc::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px)}
+.drop{position:relative;display:grid;place-items:center;min-height:420px;border-radius:20px;border:1.5px dashed var(--line-2);background:radial-gradient(80% 60% at 50% 40%,rgba(201,53,224,.06),transparent 70%),var(--well);cursor:pointer;overflow:hidden;transition:border-color .3s,background .3s}
+.drop:hover,.drop.over{border-color:var(--amber)}
+.drop.over{background:radial-gradient(80% 60% at 50% 40%,rgba(201,53,224,.14),transparent 70%),var(--well)}
+.drop-empty{display:grid;justify-items:center;gap:14px;text-align:center;padding:24px}
+.drop-ico{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;background:rgba(201,53,224,.1);border:1px solid rgba(201,53,224,.35);transition:transform .4s var(--ease)}
+.drop:hover .drop-ico{transform:translateY(-4px) rotate(-4deg)}
+.drop-empty b{font-size:18px}
+.drop-empty span{color:var(--mute);font-size:14px;max-width:30ch}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.drop .scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);box-shadow:0 0 18px var(--amber);top:0;opacity:0}
+.drop.scan .scanline{animation:scan 1.3s ease-in-out 2}
+@keyframes scan{0%{top:0;opacity:1}50%{top:100%}100%{top:0;opacity:1}}
+.drop-bar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:14px}
+.drop-bar span{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.linkbtn{background:none;border:0;padding:8px 6px;color:var(--amber-t);font-weight:600;font-size:13.5px;cursor:pointer;flex:none;min-height:40px}
+.calc-form{display:grid;gap:22px;align-content:start;padding:clamp(6px,1vw,12px)}
+.step-h{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.step-h i{font-style:normal;font-family:var(--f-mono);font-size:11.5px;color:var(--amber-t)}
+.step-h b{font-weight:600;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--tint-1);font-size:14px;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s}
+.chip:hover{border-color:var(--line-3)}
+.chips.bad .chip{border-color:var(--err)}
+.chip[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-weight:700}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);padding:4px;gap:4px;border-radius:14px;background:var(--well);border:1px solid var(--line)}
+.seg button{min-height:44px;border:0;border-radius:10px;background:transparent;cursor:pointer;font-size:14px;color:var(--fg-2);transition:background .25s,color .25s}
+.seg button[aria-pressed="true"]{background:var(--steel-2);color:var(--fg);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:grid;gap:7px}
+.field label{font-size:12.5px;color:var(--mute)}
+.inp{width:100%;min-height:52px;padding:12px 14px;border-radius:12px;border:1px solid var(--line-2);background:var(--well);font-size:16px;transition:border-color .2s,box-shadow .2s}
+.inp::placeholder{color:var(--mute-2)}
+.inp:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 4px rgba(201,53,224,.14)}
+textarea.inp{min-height:110px;resize:vertical}
+.inp.bad{border-color:var(--err)}
+.result{position:relative;border-radius:20px;padding:22px;background:linear-gradient(145deg,var(--panel-c),var(--panel-d));border:1px solid var(--line-2);overflow:hidden}
+.result.ghost{opacity:.55}
+.result::after{content:"";position:absolute;top:-60%;left:-30%;width:40%;height:220%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);transform:rotate(18deg) translateX(-200%);pointer-events:none}
+.result.live::after{animation:shine 1.6s var(--ease) .2s}
+@keyframes shine{to{transform:rotate(18deg) translateX(520%)}}
+.result-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.price{margin-bottom:4px;display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:14px;row-gap:2px;font-family:var(--f-display);font-weight:600;font-variant-numeric:tabular-nums}
+.price small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--mute);letter-spacing:.08em}
+.price span{font-size:clamp(26px,3vw,38px);letter-spacing:-.02em;white-space:nowrap}
+.price .hi{color:var(--amber-t)}
+.gauge{position:relative;height:8px;border-radius:8px;background:var(--well);margin:18px 0 6px;overflow:hidden}
+.gauge i{position:absolute;top:0;bottom:0;border-radius:8px;background:linear-gradient(90deg,var(--amber-2),var(--amber));transition:left .9s var(--ease),width .9s var(--ease)}
+.gauge-l{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10.5px;color:var(--mute)}
+.result ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:13.5px;color:var(--fg-2)}
+.result ul li{display:flex;gap:8px}
+.result ul li::before{content:"";flex:none;width:5px;height:5px;margin-top:8px;background:var(--amber);transform:rotate(45deg)}
+.result .disc{margin-top:14px;font-size:13px;color:var(--mute)}
+.result .btn{margin-top:16px}
+.calc-meta{display:flex;align-items:center;gap:10px;color:var(--mute);font-size:12.5px}
+@media (max-width:900px){.calc{grid-template-columns:1fr;border-radius:22px}.drop{min-height:260px}}
+@media (max-width:480px){.fields{grid-template-columns:1fr}.chip{flex:1 1 calc(50% - 8px);padding:0 10px}}
+
+/* PROCESS */
+#process{background:linear-gradient(180deg,var(--graphite),var(--ink))}
+.proc{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;padding-top:44px}
+.proc-rail{position:absolute;top:12px;left:0;right:0;height:2px;background:var(--line)}
+.proc-rail i{position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);background:var(--splash);box-shadow:0 0 14px rgba(201,53,224,.5);transition:width .2s linear}
+.pstep{position:relative;display:grid;gap:12px;align-content:start}
+.pstep::before{content:"";position:absolute;top:-38px;left:0;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--line-2);transition:background .4s,border-color .4s,box-shadow .4s}
+.pstep.on::before{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 6px rgba(201,53,224,.16)}
+.pnum{font-family:var(--f-display);font-weight:800;font-size:clamp(44px,5vw,72px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.2px var(--line-3);transition:color .6s,-webkit-text-stroke-color .6s}
+.pstep.on .pnum{color:var(--fg);-webkit-text-stroke-color:transparent}
+.pstep p{color:var(--mute);font-size:14.5px;max-width:28ch}
+.pstep .ptool{font-family:var(--f-mono);font-size:11px;color:var(--mute);letter-spacing:.06em;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+@media (max-width:860px){
+  .proc{grid-template-columns:1fr;padding-top:0;padding-left:36px;gap:34px}
+  .proc-rail{top:0;bottom:0;left:6px;right:auto;width:2px;height:auto}
+  .proc-rail i{width:auto;right:0;height:var(--p,0%);bottom:auto}
+  .pstep::before{top:6px;left:-36px}
+}
+
+/* SERVICES */
+#services{background:var(--ink)}
+.svc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.scard{text-decoration:none;color:inherit;--mx:50%;--my:50%;position:relative;display:grid;align-content:space-between;gap:46px;min-height:230px;padding:22px;border-radius:var(--r-m);background:var(--steel);border:1px solid var(--line);overflow:hidden;isolation:isolate;transition:transform .45s var(--ease),border-color .3s}
+.scard::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .4s;background:radial-gradient(260px circle at var(--mx) var(--my),rgba(201,53,224,.16),transparent 60%),repeating-linear-gradient(100deg,rgba(255,255,255,.03) 0 1px,transparent 1px 4px)}
+.scard:hover{transform:translateY(-6px);border-color:var(--line-2)}
+.scard:hover::before{opacity:1}
+.scard .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--well);border:1px solid var(--line-2);transition:background .4s,border-color .4s,transform .5s var(--ease)}
+.scard .ico svg{width:24px;height:24px;stroke:var(--metal);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+.scard:hover .ico{background:var(--amber);border-color:var(--amber);transform:rotate(-8deg)}
+.scard:hover .ico svg{stroke:var(--amber-ink)}
+.scard p{color:var(--mute);font-size:14px;margin-top:8px}
+.scard .go{position:absolute;top:22px;right:22px;font-family:var(--f-mono);font-size:11px;color:var(--mute);transition:color .3s,transform .4s var(--ease)}
+.scard:hover .go{color:var(--amber-t);transform:translate(3px,-3px)}
+@media (max-width:1040px){.svc{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.svc{grid-template-columns:1fr}.scard{min-height:0;gap:26px}}
+
+/* GALLERY */
+#works{background:linear-gradient(180deg,var(--ink),var(--graphite))}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.gal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:clamp(150px,15vw,210px);gap:12px}
+.tile{position:relative;grid-column:span 2;border-radius:var(--r-m);overflow:hidden;background:var(--well);border:1px solid var(--line);cursor:zoom-in;padding:0;transition:opacity .45s,transform .45s var(--ease)}
+.tile.big{grid-column:span 4;grid-row:span 2}
+.tile.wide{grid-column:span 3}
+.tile svg{position:absolute;inset:0;width:100%;height:100%;display:block;transition:transform 1s var(--ease)}
+.tile:hover svg{transform:scale(1.07)}
+.tile-cap{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:end;gap:10px;padding:16px;background:linear-gradient(0deg,rgba(6,7,9,.85),transparent);text-align:left}
+.tile-cap b{display:block;font-size:14.5px}
+.tile-cap > span > span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.tile-cap em{font-style:normal;flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--tint-2);border:1px solid var(--line-2);transition:background .3s,transform .4s var(--ease)}
+.tile:hover .tile-cap em{background:var(--amber);color:var(--amber-ink);transform:rotate(45deg)}
+.tile.out{display:none}
+.tile .ba-tag{position:absolute;top:12px;left:12px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;padding:5px 9px;border-radius:999px;background:rgba(10,11,13,.7);border:1px solid var(--line-2)}
+@media (max-width:860px){.gal{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:clamp(130px,30vw,220px)}.tile,.tile.wide{grid-column:span 1}.tile.big{grid-column:span 2;grid-row:span 1}}
+@media (max-width:520px){.gal{grid-template-columns:1fr;grid-auto-rows:auto}.tile,.tile.big,.tile.wide{grid-column:span 1;grid-row:auto;aspect-ratio:820/420}}
+
+/* LIGHTBOX & MODALS */
+.ov{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);background:rgba(5,6,8,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:fadeIn .35s ease}
+.lb{position:relative;width:min(1200px,100%);display:grid;gap:16px;animation:pop .5s var(--ease)}
+@keyframes pop{from{opacity:0;transform:scale(.96) translateY(10px)}}
+.lb .ba-stage{border-radius:20px}
+.lb-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lb-bar h3{font-size:clamp(16px,2vw,22px)}
+.lb-bar p{color:var(--mute);font-size:14px}
+.lb-nav{display:flex;gap:8px}
+.icon-btn{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--line-2);background:var(--tint-1);cursor:pointer;font-size:18px;transition:background .2s,border-color .2s}
+.icon-btn:hover{background:var(--tint-2);border-color:var(--line-3)}
+.ov-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;z-index:2}
+.modal{position:relative;width:min(560px,100%);max-height:calc(100dvh - 32px);overflow:auto;border-radius:24px;padding:clamp(20px,3vw,32px);background:linear-gradient(160deg,var(--panel-a),var(--panel-b));border:1px solid var(--line-2);animation:pop .5s var(--ease)}
+.modal h3{font-size:clamp(20px,2.4vw,26px);margin-bottom:6px}
+.modal form{display:grid;gap:12px;margin-top:20px}
+.attach{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;border:1px dashed var(--line-2);background:var(--well)}
+.attach img{width:56px;height:56px;object-fit:cover;border-radius:10px;flex:none}
+.attach .ph{width:56px;height:56px;border-radius:10px;display:grid;place-items:center;background:var(--steel);flex:none;color:var(--mute)}
+.attach span{font-size:13.5px;color:var(--fg-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ok{display:grid;justify-items:center;text-align:center;gap:14px;padding:20px 0}
+.ok .tick{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:rgba(95,211,154,.12);border:1px solid rgba(95,211,154,.4)}
+.ok .tick path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .6s var(--ease) .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ok p{color:var(--mute);max-width:36ch}
+
+/* WHY */
+#why{background:var(--graphite)}
+.why{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.wcard{grid-column:span 2;position:relative;padding:26px;border-radius:var(--r-m);border:1px solid var(--line);background:linear-gradient(160deg,var(--steel),var(--steel-3));overflow:hidden;min-height:200px;display:grid;align-content:space-between;gap:30px}
+.wcard:nth-child(4),.wcard:nth-child(5){grid-column:span 3}
+.wcard .n{font-family:var(--f-mono);font-size:12px;color:var(--amber-t);letter-spacing:.1em}
+.wcard h3{font-size:clamp(18px,1.7vw,23px)}
+.wcard p{color:var(--mute);font-size:14px;margin-top:8px;max-width:40ch}
+.wcard .viz{position:absolute;right:-10px;top:-10px;width:150px;height:150px;opacity:.5;pointer-events:none}
+.wcard .viz *{fill:none;stroke:var(--line-2);stroke-width:1}
+.wcard:hover .viz .spin{animation:rot 6s linear infinite;transform-origin:75px 75px}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media (max-width:900px){.why{grid-template-columns:1fr 1fr}.wcard,.wcard:nth-child(4),.wcard:nth-child(5){grid-column:span 1}.wcard:nth-child(5){grid-column:span 2}}
+@media (max-width:560px){.why{grid-template-columns:1fr}.wcard:nth-child(5){grid-column:span 1}}
+
+/* MAP */
+#map{background:var(--ink)}
+.mapgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px}
+.mapbox{position:relative;height:clamp(420px,46vw,600px);border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line);background:var(--map-bg);touch-action:pan-y}
+.mapbox svg{width:100%;height:100%;display:block;cursor:grab}
+.mapbox.dragging svg{cursor:grabbing}
+.map-ctrl{position:absolute;right:14px;top:14px;display:grid;gap:8px;z-index:2}
+.map-ctrl .icon-btn{background:var(--chip-bg);backdrop-filter:blur(8px)}
+.map-card{position:absolute;z-index:3;width:250px;padding:16px;border-radius:16px;transform:translate(-50%,calc(-100% - 34px));opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease)}
+.map-card.show{opacity:1;pointer-events:auto;transform:translate(-50%,calc(-100% - 42px))}
+.map-card b{display:block;font-family:var(--f-display);font-size:14px;font-weight:600}
+.map-card span{display:block;color:var(--mute);font-size:13px;margin:4px 0 12px}
+.map-card::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;margin-left:-7px;transform:rotate(45deg);background:inherit;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.marker{cursor:pointer;outline:none}
+.marker .pulse{transform-box:fill-box;transform-origin:center;animation:mpulse 2.2s ease-out infinite}
+@keyframes mpulse{from{transform:scale(.4);opacity:.9}to{transform:scale(2.4);opacity:0}}
+.marker .pin{transition:transform .35s var(--ease);transform-box:fill-box;transform-origin:50% 100%}
+.marker:hover .pin,.marker:focus-visible .pin{transform:scale(1.15) translateY(-3px)}
+.map-legend{position:absolute;left:14px;bottom:14px;padding:8px 12px;border-radius:12px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--mute)}
+.contact-card{display:grid;gap:0;align-content:start;padding:clamp(20px,2.6vw,30px);border-radius:var(--r-l);background:var(--steel);border:1px solid var(--line)}
+.crow{display:grid;gap:4px;padding:16px 0;border-bottom:1px solid var(--line)}
+.crow:first-child{padding-top:0}
+.crow dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.crow dd{margin:0;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ph-val{color:var(--ph)}
+.copy{min-height:36px;padding:0 10px;border-radius:10px;border:1px solid var(--line-2);background:transparent;font-size:12px;cursor:pointer;color:var(--mute)}
+.copy:hover{color:var(--fg)}
+.contact-card .btn{margin-top:22px}
+@media (max-width:900px){.mapgrid{grid-template-columns:1fr}}
+
+/* REVIEWS */
+#reviews{background:linear-gradient(180deg,var(--ink),var(--graphite))}
+.rv-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.rv-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:10px;scrollbar-width:none;margin-inline:calc(-1*clamp(16px,4vw,44px));padding-inline:clamp(16px,4vw,44px);scroll-padding-inline:clamp(16px,4vw,44px)}
+.rv-track::-webkit-scrollbar{display:none}
+.rv{flex:0 0 min(380px,84%);scroll-snap-align:start;display:grid;gap:18px;align-content:space-between;padding:24px;border-radius:var(--r-m);background:var(--steel);border:1px solid var(--line);min-height:250px;transition:border-color .3s,transform .4s var(--ease)}
+.rv:hover{border-color:var(--line-2);transform:translateY(-4px)}
+.stars{display:flex;gap:3px;color:var(--amber-t);font-size:15px;letter-spacing:2px}
+.rv q{quotes:none;color:var(--fg-2);font-size:15.5px;line-height:1.55}
+.rv .who{display:flex;align-items:center;gap:12px}
+.rv .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,var(--steel-2),var(--steel-3));font-family:var(--f-display);font-size:14px;color:var(--metal);border:1px solid var(--line-2)}
+.rv .who b{display:block;font-size:14.5px}
+.rv .who span{font-size:12.5px;color:var(--mute)}
+.ph-chip{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--ph);border:1px dashed rgba(231,211,171,.4);border-radius:999px;padding:3px 8px;white-space:nowrap}
+
+/* CTA */
+.cta{position:relative;overflow:hidden;border-radius:32px;padding:clamp(28px,5vw,72px);background:
+  radial-gradient(60% 90% at 85% 50%,rgba(201,53,224,.22),transparent 60%),
+  linear-gradient(135deg,var(--panel-a),var(--panel-b));border:1px solid var(--line-2);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:center;gap:24px}
+.cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-45deg,rgba(201,53,224,.06) 0 14px,transparent 14px 28px);mask-image:linear-gradient(90deg,transparent 55%,#000);-webkit-mask-image:linear-gradient(90deg,transparent 55%,#000)}
+.cta h2{font-size:clamp(34px,5.4vw,78px);font-weight:800;letter-spacing:-.035em;line-height:.98}
+.cta h2 span{display:block;color:var(--amber-t)}
+.cta p{margin-top:18px;color:var(--fg-2);max-width:44ch;font-size:clamp(15px,1.4vw,18px)}
+.cta .btn{margin-top:28px;min-height:60px;padding:0 32px;font-size:16.5px}
+.cta-mech{position:relative;justify-self:center;width:min(280px,100%)}
+@media (min-width:801px){.cta-mech svg{transform:scaleX(-1)}}
+@media (max-width:800px){.cta{grid-template-columns:1fr}.cta-mech{order:-1;width:150px;justify-self:start;margin-bottom:-10px}}
+
+/* CONTACT */
+#contact{background:var(--graphite)}
+.cform{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);align-items:start}
+.cform form{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:clamp(18px,2.6vw,30px);border-radius:var(--r-l);background:var(--steel);border:1px solid var(--line)}
+.cform .full{grid-column:1/-1}
+.fileinp{display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 14px;border-radius:12px;border:1px dashed var(--line-2);background:var(--well);cursor:pointer;transition:border-color .2s}
+.fileinp:hover{border-color:var(--amber)}
+.fileinp input{position:absolute;opacity:0;width:1px;height:1px}
+.fileinp .t{font-size:14px;color:var(--fg-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fileinp img{width:40px;height:40px;border-radius:8px;object-fit:cover}
+.cform aside{display:grid;gap:20px}
+.cform aside ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.cform aside li{display:flex;gap:12px;color:var(--fg-2);font-size:15px}
+.cform aside li i{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--amber-t);padding-top:3px}
+@media (max-width:860px){.cform{grid-template-columns:1fr}}
+@media (max-width:520px){.cform form{grid-template-columns:1fr}}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid var(--line);padding-block:56px calc(env(safe-area-inset-bottom,0px) + 32px)}
+.f-word{font-family:var(--f-display);font-weight:800;font-size:clamp(36px,7.6vw,112px);letter-spacing:-.04em;line-height:.9;background:var(--wordmark-2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.f-word small{display:block;font-family:var(--f-mono);font-weight:400;font-size:clamp(10px,1.2vw,14px);letter-spacing:.5em;color:var(--mute);-webkit-text-fill-color:var(--mute);margin-top:12px}
+.f-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:44px;padding-top:28px;border-top:1px solid var(--line)}
+.f-grid h4{margin:0 0 12px;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.f-grid a,.f-grid p{display:block;text-decoration:none;color:var(--fg-2);font-size:15px;padding:5px 0}
+.f-grid a:hover{color:var(--amber-t)}
+.f-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:40px;font-family:var(--f-mono);font-size:11.5px;color:var(--mute)}
+@media (max-width:640px){.f-grid{grid-template-columns:1fr 1fr}}
+
+/* MECHANIC */
+.mech svg{display:block;width:100%;height:auto;overflow:visible}
+.mech .armL,.mech .armR{transform-box:view-box;transition:transform .5s var(--ease)}
+.mech .armL{transform-origin:62px 124px}
+.mech .armR{transform-origin:138px 124px}
+.mech .bodyG{transform-box:view-box;transform-origin:100px 230px}
+.mech.idle .bodyG{animation:breathe 3.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:scaleY(1.015) translateY(-1px)}}
+.mech .lids{transform-box:fill-box;transform-origin:center;animation:blink 5.5s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
+.mech.wave .armL{animation:wave 1.3s var(--ease)}
+@keyframes wave{0%{transform:rotate(0)}25%{transform:rotate(150deg)}40%{transform:rotate(125deg)}55%{transform:rotate(155deg)}70%{transform:rotate(125deg)}100%{transform:rotate(0)}}
+.mech.raise .armL{animation:raise 1.4s var(--ease)}
+@keyframes raise{0%,100%{transform:rotate(0)}30%,70%{transform:rotate(165deg)}}
+.mech.fix .armR{animation:fix 1.4s ease-in-out}
+@keyframes fix{0%,100%{transform:rotate(0)}15%{transform:rotate(-55deg)}25%,45%,65%{transform:rotate(-62deg) translateX(2px)}35%,55%,75%{transform:rotate(-50deg) translateX(-2px)}}
+.mech .mist{opacity:0}
+.mech.fix .mist{animation:mist 1.4s ease-out}
+@keyframes mist{15%{opacity:0}30%,75%{opacity:1}100%{opacity:0}}
+.mech.point .armR{transform:rotate(-78deg)}
+.mech.point .mist{animation:mistLoop 2.4s ease-out infinite}
+@keyframes mistLoop{0%,40%{opacity:0}55%,80%{opacity:.9}100%{opacity:0}}
+
+.peek{position:fixed;z-index:40;bottom:16vh;width:104px;transition:transform .9s var(--ease);pointer-events:none}
+.peek.right{right:0;transform:translateX(110%) rotate(-8deg)}
+.peek.left{left:0;transform:translateX(-110%) rotate(8deg)}
+.peek.right.on{transform:translateX(26%) rotate(-8deg)}
+.peek.left.on{transform:translateX(-26%) rotate(8deg)}
+.peek.left .mech svg{transform:scaleX(-1)}
+.peek.on{pointer-events:auto}
+.peek .mech{cursor:pointer}
+.bubble{position:absolute;bottom:100%;width:220px;padding:12px 14px;border-radius:16px 16px 4px 16px;font-size:13.5px;line-height:1.4;color:var(--fg);opacity:0;transform:translateY(8px) scale(.96);transition:opacity .3s,transform .4s var(--ease);pointer-events:none}
+.peek.right .bubble{right:50%}
+.peek.left .bubble{left:50%;border-radius:16px 16px 16px 4px}
+.bubble.show{opacity:1;transform:none}
+.peek-x{position:absolute;top:-6px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line-2);background:var(--chip-bg);font-size:13px;cursor:pointer;display:grid;place-items:center;color:var(--mute)}
+.peek.right .peek-x{left:6px}.peek.left .peek-x{right:6px}
+.mpanel{position:fixed;z-index:45;width:min(300px,calc(100vw - 32px));padding:18px;border-radius:20px;animation:pop .4s var(--ease)}
+.mpanel b{display:block;font-family:var(--f-display);font-size:16px;font-weight:600;margin-bottom:6px}
+.mpanel p{color:var(--mute);font-size:13.5px;margin-bottom:14px}
+.mpanel .row{display:flex;gap:8px}
+.mpanel .btn{flex:1;min-height:48px;padding:0 14px;font-size:14px}
+@media (max-width:700px){
+  .peek{width:66px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+  .peek.right.on{transform:translateX(34%) rotate(-10deg)}
+  .peek.left.on{transform:translateX(-34%) rotate(10deg)}
+  .bubble{width:180px;font-size:12.5px}
+}
+
+/* legs, walking, hero + walker mechanic */
+.mech .legL,.mech .legR{transform-box:view-box}
+.mech .legL{transform-origin:87px 188px}.mech .legR{transform-origin:113px 188px}
+.mech.walking .legL{animation:stepA .5s ease-in-out infinite alternate}
+.mech.walking .legR{animation:stepA .5s ease-in-out infinite alternate-reverse}
+.mech.walking .bodyG{animation:bob .25s ease-in-out infinite alternate}
+.mech.walking .armL{animation:swing .5s ease-in-out infinite alternate-reverse}
+@keyframes stepA{from{transform:rotate(16deg)}to{transform:rotate(-16deg)}}
+@keyframes bob{to{transform:translateY(-3px)}}
+@keyframes swing{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+.hero-mech{position:absolute;left:0;bottom:6%;width:clamp(56px,8.4vw,112px);z-index:3;animation:mechIn .9s var(--ease) 2s both}
+.hero-mech .mech{cursor:pointer}
+.hero-mech .bubble{left:62%;bottom:96%;border-radius:16px 16px 16px 4px;width:210px}
+@keyframes mechIn{from{opacity:0;transform:translateY(24px) scale(.85)}}
+.walker{position:fixed;left:0;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);width:80px;z-index:40;will-change:transform}
+.walker .mech{cursor:pointer}
+.walker.flipX .mech svg{transform:scaleX(-1)}
+.walker .bubble{left:50%;transform:translate(-50%,8px) scale(.96);width:200px;border-radius:16px}
+.walker .bubble.show{transform:translate(-50%,0)}
+.mpanel .linkbtn{display:block;margin-inline:auto}
+@media (max-width:700px){.walker{width:58px}.walker .bubble{width:170px;font-size:12.5px}.hero-mech .bubble{width:170px;font-size:12.5px}}
+
+/* hero photo + brand logo */
+.hero-car{margin-top:clamp(-90px,-5.4vw,-30px)}
+.hero-shot{position:relative;margin:0;border-radius:clamp(18px,2.4vw,30px);overflow:hidden;aspect-ratio:16/9;background:#0b0c0e;border:1px solid var(--line-2);box-shadow:0 50px 100px -40px var(--shadow);animation:shotIn 1.5s var(--ease) .15s both}
+.hero-shot img#heroImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease,transform 1.6s var(--ease);animation:imgIn 2s var(--ease) .15s both}
+.hero-shot img#heroImg.swap{opacity:0;transform:scale(1.04)}
+.hero-shot::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 62%,rgba(0,0,0,.55))}
+@keyframes shotIn{from{clip-path:inset(10% 7% 10% 7% round 30px);opacity:0}to{clip-path:inset(0 round 0);opacity:1}}
+@keyframes imgIn{from{transform:scale(1.14)}}
+.hero-cap{position:absolute;z-index:2;top:16px;left:16px;display:flex;align-items:center;gap:10px;margin:0;padding:9px 14px;border-radius:999px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;color:#eef1f4;background:rgba(14,16,19,.55);border-color:rgba(255,255,255,.14);animation:fadeIn .8s ease 1.4s both}
+.hero-cap .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(201,53,224,.2);animation:pulse 1.8s infinite}
+.hero-thumbs{position:absolute;z-index:2;right:16px;bottom:16px;display:flex;gap:6px;padding:6px;border-radius:16px;background:rgba(14,16,19,.5);border-color:rgba(255,255,255,.14);animation:fadeIn .8s ease 1.6s both}
+.hthumb{width:62px;height:44px;padding:0;border-radius:10px;overflow:hidden;border:1.5px solid transparent;cursor:pointer;background:#000;opacity:.7;transition:opacity .25s,border-color .25s,transform .3s var(--ease)}
+.hthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.hthumb:hover{opacity:1;transform:translateY(-2px)}
+.hthumb[aria-pressed="true"]{opacity:1;border-color:var(--amber)}
+.hero-logo{position:absolute;z-index:4;right:-1.5%;top:clamp(-70px,-6vw,-30px);width:clamp(84px,12vw,168px);aspect-ratio:1;border-radius:50%;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45));animation:stickIn 1s cubic-bezier(.3,1.6,.5,1) 1.1s both;transition:transform .8s var(--ease)}
+.hero-logo:hover{transform:rotate(-14deg) scale(1.05)}
+@keyframes stickIn{from{opacity:0;transform:scale(.3) rotate(-60deg)}to{opacity:1;transform:rotate(-8deg)}}
+.hero-logo svg,.logo-badge svg,.f-logo svg{display:block;width:100%;height:100%}
+.logo-badge{display:block;width:42px;height:42px;border-radius:50%;flex:none;box-shadow:0 6px 16px -6px rgba(0,0,0,.6);transition:transform .6s var(--ease)}
+.logo:hover .logo-badge{transform:rotate(-12deg)}
+.f-brand{display:flex;align-items:center;gap:clamp(16px,3vw,36px)}
+.f-logo{width:clamp(80px,11vw,150px);flex:none}
+.hero-mech{left:-1.5%;bottom:-5%}
+@media (max-width:700px){.hero-shot{aspect-ratio:4/3}.hthumb{width:46px;height:34px}.hero-thumbs{right:10px;bottom:10px;gap:4px;padding:4px}.hero-cap{top:10px;left:10px;font-size:10px;padding:7px 10px}.hero-logo{right:-2%}.hero-mech{bottom:-8%}}
+
+/* hero v3: script wordmark + cut-out car */
+.hero h1 .h-rebuild{font-family:"Yellowtail","Brush Script MT",cursive;font-weight:400;font-size:clamp(84px,15vw,224px);line-height:1.05;letter-spacing:0;padding:.02em .18em .12em;transform:rotate(-4deg);display:inline-block;animation:typeIn2 1.2s var(--ease) both}
+@keyframes typeIn2{from{opacity:0}to{opacity:1}}
+.hero h1 .h-sub{margin-top:clamp(0px,.4vw,6px);animation:fadeIn 1.2s ease .15s both}
+.hero .hero-car{margin-top:clamp(10px,2vw,28px);max-width:720px}
+.hero-cut{position:relative;z-index:1;display:block;width:100%;height:auto;margin-inline:auto;animation:cutIn 1.7s var(--ease) .35s both}
+@keyframes cutIn{from{opacity:0;transform:translateX(-8%) scale(.97);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.hero .hero-car::after{content:"";position:absolute;z-index:0;left:4%;right:6%;bottom:-2%;height:12%;border-radius:50%;background:radial-gradient(closest-side,var(--shadow),transparent);filter:blur(6px);animation:fadeIn 1.4s ease 1s both}
+.hero .hero-cap{top:auto;bottom:4%;left:auto;right:2%}
+.hero-mech{left:-2%;bottom:-2%}
+@media (max-width:700px){.hero .hero-cap{position:static;display:flex;width:fit-content;margin:12px 0 0 auto}}
+
+/* hero v4: full photo with feathered edges */
+.hero .hero-car{max-width:600px}
+.hero .hero-car::after{display:none}
+.hero-photo{position:relative;z-index:1;display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:50% 58%;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.08) 4%,rgba(0,0,0,.3) 8%,rgba(0,0,0,.65) 12%,#000 15.5%,#000 84.5%,rgba(0,0,0,.65) 88%,rgba(0,0,0,.3) 92%,rgba(0,0,0,.08) 96%,transparent 100%),linear-gradient(180deg,transparent 0,rgba(0,0,0,.1) 5%,rgba(0,0,0,.35) 10%,rgba(0,0,0,.7) 15%,#000 20%,#000 80%,rgba(0,0,0,.7) 85%,rgba(0,0,0,.35) 90%,rgba(0,0,0,.1) 95%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.08) 4%,rgba(0,0,0,.3) 8%,rgba(0,0,0,.65) 12%,#000 15.5%,#000 84.5%,rgba(0,0,0,.65) 88%,rgba(0,0,0,.3) 92%,rgba(0,0,0,.08) 96%,transparent 100%),linear-gradient(180deg,transparent 0,rgba(0,0,0,.1) 5%,rgba(0,0,0,.35) 10%,rgba(0,0,0,.7) 15%,#000 20%,#000 80%,rgba(0,0,0,.7) 85%,rgba(0,0,0,.35) 90%,rgba(0,0,0,.1) 95%,transparent 100%);mask-composite:intersect;
+  animation:photoIn 1.6s var(--ease) .3s backwards;transition:opacity .15s linear}
+@keyframes photoIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:none}}
+.hero .hero-cap{bottom:6%;right:10%}
+.hero-mech{left:4%;bottom:0}
+@media (max-width:700px){.hero-photo{aspect-ratio:4/3}.hero-mech{left:0;bottom:-4%}}
+/* spacing + mechanic placement */
+.hero .hero-car{margin-top:clamp(28px,3.6vw,52px)}
+.hero .hero-bottom{margin-top:clamp(44px,6vw,92px)}
+.hero .hero-mech{left:-24%;bottom:2%}
+.hero .hero-cap{right:-22%;bottom:auto;top:calc(100% + 6px)}
+@media (max-width:1000px){.hero .hero-cap{right:-6%}}
+@media (max-width:1000px){.hero .hero-mech{left:-12%}}
+@media (max-width:700px){.hero .hero-mech{left:-3%;bottom:-4%}.hero .hero-bottom{margin-top:36px}}
+
+.hero-glow{position:absolute;z-index:0;inset:-18% -30%;pointer-events:none;background:url("img/forester-rear34-b-t.webp") center/cover no-repeat;filter:blur(70px) saturate(1.6);opacity:var(--glow-op);border-radius:50%;
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 25%,rgba(0,0,0,.5) 55%,transparent 82%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 25%,rgba(0,0,0,.5) 55%,transparent 82%);animation:fadeIn 2s ease .6s backwards;transition:opacity .15s linear}
+:root{--glow-op:.7}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--glow-op:.18}}
+:root[data-theme="light"]{--glow-op:.18}
+
+.logo-t .logo-script{display:block;font-family:"Yellowtail","Brush Script MT",cursive;font-weight:400;font-size:26px;letter-spacing:0;line-height:.9;transform:rotate(-4deg);transform-origin:left center}
+.logo-t small{margin-top:3px}
+
+/* hero v5: padded photo, whole car visible */
+.hero .hero-car{max-width:880px;margin-top:clamp(8px,1.6vw,24px)}
+.hero-photo{aspect-ratio:auto}
+.hero .hero-mech{left:1%;bottom:12%}
+.hero .hero-cap{right:15%;top:auto;bottom:4%}
+.hero .hero-bottom{margin-top:clamp(16px,2.6vw,40px)}
+@media (max-width:1000px){.hero .hero-mech{left:0}.hero .hero-cap{right:12%}}
+@media (max-width:700px){.hero-photo{aspect-ratio:auto}.hero .hero-car{margin-inline:-16px}.hero .hero-mech{left:2%;bottom:6%;width:52px}.hero .hero-cap{margin:0 16px 0 auto}}
+
+/* brand splatter + glow */
+.hero h1 .h-rebuild{filter:drop-shadow(0 8px 34px var(--wm-glow))}
+.splat{position:absolute;inset:0;pointer-events:none;opacity:var(--splat-op);z-index:0}
+.splat svg{width:100%;height:100%;display:block}
+.hero-in,.cta>*:not(.splat){position:relative;z-index:1}
+.cta .splat{opacity:calc(var(--splat-op) * 1.6);-webkit-mask-image:linear-gradient(90deg,transparent 35%,#000 80%);mask-image:linear-gradient(90deg,transparent 35%,#000 80%)}
+.cta::before{display:none}
+.case[aria-pressed="true"]{box-shadow:0 0 0 1px var(--amber),0 20px 50px -24px rgba(201,53,224,.45)}
+.tags li:nth-child(2)::before{background:var(--c-cyan)}.tags li:nth-child(3)::before{background:var(--c-lime)}.tags li:nth-child(4)::before{background:var(--c-violet)}
+.wcard .n{background:var(--splash);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pstep.on::before{background:var(--amber);border-color:var(--amber)}
+.pstep:nth-child(3).on::before{background:var(--c-violet);border-color:var(--c-violet);box-shadow:0 0 0 6px rgba(138,92,255,.18)}
+.pstep:nth-child(4).on::before{background:#5f8dff;border-color:#5f8dff;box-shadow:0 0 0 6px rgba(95,141,255,.18)}
+.pstep:nth-child(5).on::before,.pstep:nth-child(6).on::before{background:var(--c-cyan);border-color:var(--c-cyan);box-shadow:0 0 0 6px rgba(30,200,234,.18)}
+
+/* solid secondary buttons */
+.btn-ghost{--bg:var(--btn2);background:var(--btn2);border:1px solid var(--line-2);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 24px -14px var(--shadow)}
+.btn-ghost:hover{background:var(--btn2-h);border-color:var(--line-3)}
+:root{--btn2:#17221f;--btn2-h:#1f2d29}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--btn2:#ffffff;--btn2-h:#f3f7f5}}
+:root[data-theme="light"]{--btn2:#ffffff;--btn2-h:#f3f7f5}
+
+/* violet-pink secondary hero button */
+.btn-grad{--fgc:#fff;background:linear-gradient(120deg,#7b4dff 0%,#b43ee0 48%,#ff2d8a 100%);background-size:160% 100%;background-position:0% 50%;color:#fff;border:0;box-shadow:0 10px 28px -14px rgba(138,92,255,.7);transition:transform .25s var(--ease),box-shadow .25s var(--ease),background-position .6s var(--ease)}
+.btn-grad:hover{background-position:100% 50%;box-shadow:0 14px 34px -12px rgba(201,53,224,.55)}
+
+/* ===== main accent: violet → pink (dark + light variants) ===== */
+:root{--grad:#c935e0;--amber:#c935e0;--amber-2:#df72ee;--amber-ink:#ffffff;--amber-t:#de6ff2;--wm-glow:rgba(201,53,224,.3);--acc-shadow:rgba(201,53,224,.55)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--grad:#b02ccc;--amber:#b02ccc;--amber-2:#c95ae0;--amber-t:#9a1fb6;--wm-glow:rgba(176,44,204,.2);--acc-shadow:rgba(176,44,204,.4)}}
+:root[data-theme="light"]{--grad:#b02ccc;--amber:#b02ccc;--amber-2:#c95ae0;--amber-t:#9a1fb6;--wm-glow:rgba(176,44,204,.2);--acc-shadow:rgba(176,44,204,.4)}
+.btn{--bg:var(--grad);--fgc:#fff;background:var(--grad);transition:transform .25s var(--ease),box-shadow .25s var(--ease),filter .3s}
+.btn:hover{filter:saturate(1.15) brightness(1.06);box-shadow:0 14px 34px -12px var(--acc-shadow)}
+.btn-ghost:hover{filter:none}
+.btn-ghost,.btn-ghost:hover{background-size:auto}
+.chip[aria-pressed="true"],.case[aria-pressed="true"] .case-num,.ba-label.r{background:var(--grad);border-color:transparent;color:#fff}
+.price .hi{background:none;color:var(--amber-t)}
+.eyebrow::before{background:var(--grad)}
+.scard:hover .ico{background:var(--grad);border-color:transparent}
+.scard:hover .ico svg{stroke:#fff}
+.tile:hover .tile-cap em{background:var(--grad);color:#fff}
+
+.drop-ico{background:rgba(201,53,224,.1);border-color:rgba(201,53,224,.35)}
+.proc-rail i{background:var(--amber);box-shadow:0 0 14px var(--acc-shadow)}
+
+/* white secondary hero button (both themes) */
+.btn.btn-white{--fgc:#0c1714;background:#ffffff;color:#0c1714;border:1px solid rgba(10,30,24,.12);box-shadow:0 10px 26px -16px rgba(0,0,0,.6)}
+.btn.btn-white:hover{background:#f4f7f5;filter:none;box-shadow:0 14px 30px -14px rgba(0,0,0,.55)}
+.btn.btn-white::after{background:linear-gradient(105deg,transparent 30%,rgba(201,53,224,.12) 48%,transparent 66%)}
+
+/* hero mechanic sits right above the lead text */
+.hero-bottom > div:first-child{position:relative}
+.hero .hero-bottom .hero-mech{position:absolute;left:0;right:auto;top:auto;bottom:calc(100% + 18px);width:clamp(60px,6.6vw,92px)}
+.hero .hero-bottom .hero-mech .bubble{left:100%;bottom:58%;margin-left:6px}
+@media (max-width:700px){.hero .hero-bottom .hero-mech{width:54px;bottom:calc(100% + 14px)}}
+
+.hero .hero-cap{animation-fill-mode:backwards;transition:opacity .15s linear}
+
+/* map card stays inside the map */
+.map-card{transform:translateY(6px)}
+.map-card.show{transform:none}
+.map-card::after{left:var(--ax,50%)}
+.map-card.below::after{bottom:auto;top:-7px;transform:rotate(225deg)}
+
+/* review cards: rounded like the blocks below, not clipped on hover */
+.rv-track{padding-top:10px;padding-bottom:16px;margin-top:-10px}
+.rv{border-radius:var(--r-l);overflow:hidden}
+
+/* tighter vertical rhythm between sections */
+.sec{padding-block:clamp(52px,6.4vw,96px)}
+.hero{padding-bottom:clamp(36px,5vw,72px)}
+.sec-head{margin-bottom:clamp(26px,3.2vw,44px)}
+
+/* footer wordmark matches the hero */
+.f-word .f-script{display:inline-block;font-family:"Yellowtail","Brush Script MT",cursive;font-weight:400;font-size:clamp(56px,9vw,128px);letter-spacing:0;line-height:1.05;padding:.02em .16em .1em 0;transform:rotate(-4deg);transform-origin:left center;background:var(--wordmark);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px var(--wm-glow))}
+.f-word{background:none;-webkit-text-fill-color:initial;padding-top:.6em}
+.f-word small{margin-top:6px}
+
+/* hero v6: soft rounded fade baked into the image */
+.hero .hero-car{max-width:1000px}
+.hero-photo{-webkit-mask-image:none;mask-image:none}
+.hero .hero-cap{right:14%;bottom:12%;top:auto}
+@media (max-width:1000px){.hero .hero-cap{right:8%}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-delay:0s!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .r-pre{opacity:1;transform:none}
+}
+/* on-photo elements stay dark in both themes */
+.case-num{color:#eef1f4;background:rgba(10,11,13,.7)}
+.tile-cap{color:#eef1f4}.tile-cap > span > span{color:#b3bac2}.tile-cap em{color:#eef1f4}
+.tile .ba-tag{color:#eef1f4}
+.ba-stage .ba-label.l,.ba-stage .ba-hint{background:rgba(14,16,19,.62);color:#eef1f4;border-color:rgba(255,255,255,.14)}
+.ba-knob{color:#fff}
+/* theme toggle */
+.theme-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--tint-1);cursor:pointer;display:grid;place-items:center;color:var(--fg);transition:background .2s,transform .4s var(--ease)}
+.theme-btn:hover{background:var(--tint-2)}
+.theme-btn svg{width:20px;height:20px}
+.theme-btn .sun{display:none}
+:root[data-theme="light"] .theme-btn .sun{display:block}:root[data-theme="light"] .theme-btn .moon{display:none}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .theme-btn .sun{display:block}:root:not([data-theme="dark"]) .theme-btn .moon{display:none}}
+@media (max-width:960px){.theme-btn{width:48px;height:48px}}
+/* map colors from tokens */
+#mapSvg .m-bg{fill:var(--map-bg)}#mapSvg .m-city{fill:var(--map-city)}#mapSvg .m-dot{fill:var(--map-dot);fill-opacity:1}
+#mapSvg .m-street{stroke:var(--map-street);stroke-opacity:1}#mapSvg .m-road{stroke:var(--map-road)}
+#mapSvg .m-river{stroke:var(--map-river)}#mapSvg .m-river2{stroke:var(--map-river2)}
+#mapSvg .m-ring{stroke:var(--map-ring)}#mapSvg .m-label{fill:var(--map-label)}#mapSvg .m-park{fill:var(--map-park);fill-opacity:1}
+#mapSvg .m-kr{fill:var(--map-ring)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="blGrad" x1="0" x2="1"><stop offset="0" stop-color="#c7cdd5" stop-opacity="0"/><stop offset=".5" stop-color="#8a5cff" stop-opacity=".35"/><stop offset=".72" stop-color="#ff2d8a" stop-opacity=".8"/><stop offset="1" stop-color="#1ec8ea" stop-opacity="0"/></linearGradient></defs></svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Rebuild Coloring Workshop — наверх">
+      <span class="logo-badge" data-logo></span>
+      <span class="logo-t"><span class="logo-script">Workshop</span><small>REBUILD &amp; COLORING</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Разделы">
+      <a href="#works">Работы</a><a href="#services">Услуги</a><a href="#ba">До / После</a><a href="#calc">Калькулятор</a><a href="#map">Контакты</a>
+    </nav>
+    <a class="btn btn-sm" href="#calc">Рассчитать по фото</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Сменить тему"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+<div class="mmenu" id="mmenu" hidden>
+  <button class="mmenu-close" id="mclose" aria-label="Закрыть меню">✕</button>
+  <a href="#works">Работы</a><a href="#services">Услуги</a><a href="#ba">До / После</a><a href="#calc">Калькулятор</a><a href="#map">Контакты</a>
+  <a class="btn" href="#calc">Рассчитать по фото <span class="arr">→</span></a>
+</div>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="splat" data-splat="hero" aria-hidden="true"></div>
+  <div class="booth" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i></div>
+  <div class="wrap hero-in">
+    <h1 aria-label="Workshop Rebuild &amp; Coloring"><span class="h-rebuild">Workshop</span><span class="h-sub">REBUILD &amp; COLORING</span></h1>
+    <div class="hero-car" id="heroCar">
+      <img class="hero-photo" src="img/forester-hero-d.webp" alt="Subaru Forester в сплэш-покраске, проект мастерской" width="2120" height="1760" fetchpriority="high">
+      <span class="hero-cap glass"><span class="dot"></span>Проект мастерской · Subaru Forester</span>
+    </div>
+    <div class="hero-bottom">
+      <div>
+        <p class="lead">Восстанавливаем внешний вид автомобиля до состояния, которым хочется гордиться.</p>
+        <div class="actions">
+          <a class="btn" href="#calc">Рассчитать стоимость <span class="arr">→</span></a>
+          <a class="btn btn-white" href="#ba">Посмотреть работы</a>
+        </div>
+      </div>
+      <ul class="tags" aria-label="Коротко о мастерской">
+        <li>Москва</li><li>Кузовной ремонт</li><li>Покраска автомобилей</li><li>Восстановление после ДТП</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<svg class="bodyline" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C200 40 300 18 520 16 C760 14 860 30 1000 34 C1100 37 1160 44 1200 46"/></svg>
+
+<!-- BEFORE / AFTER -->
+<section class="sec" id="ba">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Кейсы мастерской</span>
+      <h2 class="ba-title" aria-label="До и после">До <span class="arrow">→</span> После</h2>
+      <p>Двигайте границу, чтобы сравнить автомобиль до ремонта и после. Ниже — другие работы: выберите карточку, чтобы открыть её в сравнении.</p>
+    </div>
+    <div class="ba-stage" id="baStage" style="--pos:50%">
+      <div class="ba-layer ba-before ba-swap" id="baBefore"></div>
+      <div class="ba-layer ba-after ba-swap" id="baAfter"></div>
+      <span class="ba-label l glass">ДО</span><span class="ba-label r">ПОСЛЕ</span>
+      <div class="ba-handle"><div class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></div></div>
+      <span class="ba-hint glass">Потяните ползунок</span>
+      <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" step="0.1" aria-label="Граница между фото до и после">
+    </div>
+    <div class="ba-grid" id="baGrid"></div>
+    <p class="note" style="margin-top:18px">Иллюстрации-заглушки. Замените их фотографиями реальных работ из Instagram мастерской.</p>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="sec" id="calc">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Калькулятор</span>
+      <h2>Узнайте примерную стоимость ремонта по фото</h2>
+      <p>Загрузите снимок повреждения, отметьте тип и укажите автомобиль. Покажем вилку цены за пару секунд.</p>
+    </div>
+    <div class="calc">
+      <label class="drop" id="drop" for="calcFile">
+        <input class="sr" type="file" id="calcFile" accept="image/*">
+        <div class="drop-empty" id="dropEmpty">
+          <div class="drop-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#c935e0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h2l1.6-2h5.8L16.5 6h2A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg></div>
+          <b>Загрузить фото</b>
+          <span>Перетащите снимок сюда или нажмите. На телефоне можно снять камерой или выбрать из галереи.</span>
+          <span class="btn btn-ghost btn-sm" aria-hidden="true">Выбрать фото</span>
+        </div>
+        <img id="dropImg" alt="Загруженное фото повреждения" hidden>
+        <span class="scanline" aria-hidden="true"></span>
+        <div class="drop-bar glass" id="dropBar" hidden><span id="dropName">photo.jpg</span><button type="button" class="linkbtn" id="dropChange">Заменить</button></div>
+      </label>
+
+      <div class="calc-form">
+        <div>
+          <div class="step-h"><i>01</i><b>Тип повреждения</b></div>
+          <div class="chips" id="dmgChips" role="group" aria-label="Тип повреждения"></div>
+        </div>
+        <div>
+          <div class="step-h"><i>02</i><b>Размер повреждения</b></div>
+          <div class="seg" id="sizeSeg" role="group" aria-label="Размер повреждения">
+            <button type="button" data-v="s" aria-pressed="false">Небольшое</button>
+            <button type="button" data-v="m" aria-pressed="true">Среднее</button>
+            <button type="button" data-v="l" aria-pressed="false">Крупное</button>
+          </div>
+        </div>
+        <div>
+          <div class="step-h"><i>03</i><b>Автомобиль</b></div>
+          <div class="fields">
+            <div class="field"><label for="cBrand">Марка</label><input class="inp" id="cBrand" list="brands" placeholder="Например, BMW" autocomplete="off"></div>
+            <div class="field"><label for="cModel">Модель</label><input class="inp" id="cModel" placeholder="Например, X5" autocomplete="off"></div>
+          </div>
+          <datalist id="brands"></datalist>
+        </div>
+        <button class="btn btn-block" id="calcBtn" type="button">Рассчитать стоимость <span class="arr">→</span></button>
+        <div class="result ghost" id="result" aria-live="polite">
+          <div class="result-top"><span class="eyebrow">Предварительная оценка</span><span class="note" id="resMeta">заполните шаги 01–03</span></div>
+          <div class="price"><small>ОТ</small><span id="pLo">— ₽</span><small>ДО</small><span class="hi" id="pHi">— ₽</span></div>
+          <ul id="resList" hidden></ul>
+          <p class="disc">Точная стоимость определяется после осмотра автомобиля.</p>
+          <button class="btn btn-block" id="exactBtn" type="button" hidden>Получить точный расчёт <span class="arr">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Как проходит ремонт</span>
+      <h2>Пять этапов от осмотра до выдачи</h2>
+    </div>
+    <div class="proc" id="proc">
+      <div class="proc-rail"><i></i></div>
+      <div class="pstep"><span class="pnum">01</span><h3>Осмотр</h3><p>Определяем повреждения и объём работ.</p><span class="ptool">Замер ЛКП · фотофиксация</span></div>
+      <div class="pstep"><span class="pnum">02</span><h3>Подготовка</h3><p>Разбираем повреждённые элементы и подготавливаем поверхность.</p><span class="ptool">Демонтаж · шлифовка · грунт</span></div>
+      <div class="pstep"><span class="pnum">03</span><h3>Ремонт</h3><p>Восстанавливаем геометрию и устраняем повреждения.</p><span class="ptool">Рихтовка · пайка пластика</span></div>
+      <div class="pstep"><span class="pnum">04</span><h3>Покраска</h3><p>Подбираем цвет и выполняем покраску.</p><span class="ptool">Колеровка · камера · лак</span></div>
+      <div class="pstep"><span class="pnum">05</span><h3>Финальная обработка</h3><p>Полировка, сборка и контроль результата.</p><span class="ptool">Полировка · сборка · ОТК</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Услуги</span>
+      <h2>Что мы делаем с кузовом</h2>
+    </div>
+    <div class="svc" id="svc"></div>
+  </div>
+</section>
+
+<svg class="bodyline" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C160 22 260 40 480 42 C700 44 820 28 980 24 C1080 22 1150 18 1200 16"/></svg>
+
+<!-- GALLERY -->
+<section class="sec" id="works">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Галерея работ</span>
+      <h2>Автомобили, которые уже уехали от нас</h2>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="Фильтр работ">
+      <button class="chip" data-f="all" aria-pressed="true">Все</button>
+      <button class="chip" data-f="ba" aria-pressed="false">До-После</button>
+      <button class="chip" data-f="paint" aria-pressed="false">Покраска</button>
+      <button class="chip" data-f="body" aria-pressed="false">Кузовной ремонт</button>
+      <button class="chip" data-f="dtp" aria-pressed="false">ДТП</button>
+    </div>
+    <div class="gal" id="gal"></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Преимущества</span>
+      <h2>Почему Rebuild?</h2>
+    </div>
+    <div class="why">
+      <article class="wcard"><svg class="viz" viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="60"/><circle cx="75" cy="75" r="40"/><g class="spin"><path d="M75 15v20M75 115v20M15 75h20M115 75h20"/></g></svg><span class="n">01</span><div><h3>Точный подбор цвета</h3><p>Колеруем по коду краски и сверяем с кузовом, чтобы отремонтированная деталь не выделялась.</p></div></article>
+      <article class="wcard"><svg class="viz" viewBox="0 0 150 150" aria-hidden="true"><path d="M10 110 C40 60 110 60 140 110"/><path d="M10 125 C40 75 110 75 140 125"/><g class="spin"><circle cx="75" cy="75" r="8"/></g></svg><span class="n">02</span><div><h3>Аккуратная работа с кузовом</h3><p>Восстанавливаем геометрию элементов и сохраняем заводские зазоры.</p></div></article>
+      <article class="wcard"><svg class="viz" viewBox="0 0 150 150" aria-hidden="true"><rect x="25" y="25" width="100" height="100" rx="12"/><g class="spin"><path d="M50 78l18 16 34-38"/></g></svg><span class="n">03</span><div><h3>Контроль качества на каждом этапе</h3><p>Проверяем поверхность до грунта, после покраски и перед выдачей.</p></div></article>
+      <article class="wcard"><svg class="viz" viewBox="0 0 150 150" aria-hidden="true"><rect x="20" y="40" width="110" height="80" rx="12"/><g class="spin"><circle cx="75" cy="80" r="22"/></g></svg><span class="n">04</span><div><h3>Фотоотчёт о выполненных работах</h3><p>Показываем, что было под краской и как шёл ремонт. Вы видите процесс, даже если не приезжаете.</p></div></article>
+      <article class="wcard"><svg class="viz" viewBox="0 0 150 150" aria-hidden="true"><path d="M10 100h130M30 100l14-26h62l14 26"/><g class="spin"><circle cx="48" cy="104" r="10"/><circle cx="102" cy="104" r="10"/></g></svg><span class="n">05</span><div><h3>Работа с автомобилями разных классов</h3><p>От городских хэтчбеков до премиальных седанов и внедорожников.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="sec" id="map">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Адрес</span>
+      <h2>Мы в Москве</h2>
+    </div>
+    <div class="mapgrid">
+      <div class="mapbox" id="mapbox">
+        <svg id="mapSvg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Стилизованная карта Москвы с меткой мастерской"></svg>
+        <div class="map-ctrl">
+          <button class="icon-btn" id="zIn" aria-label="Приблизить">+</button>
+          <button class="icon-btn" id="zOut" aria-label="Отдалить">−</button>
+          <button class="icon-btn" id="zHome" aria-label="Показать мастерскую"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+        </div>
+        <div class="map-card glass" id="mapCard">
+          <b>Rebuild Coloring Workshop</b>
+          <span>Бескудниковский пер., 1с1 · м. Селигерская</span>
+          <a class="btn btn-sm btn-block" href="https://yandex.ru/maps/?text=Workshop%20Rebuild%20%26%20Coloring&amp;ll=37.5500%2C55.8650&amp;z=15" target="_blank" rel="noopener">Построить маршрут <span class="arr">→</span></a>
+        </div>
+        <span class="map-legend glass">Схема Москвы · положение метки примерное</span>
+      </div>
+      <dl class="contact-card">
+        <div class="crow"><dt>Адрес</dt><dd><span>Москва, Бескудниковский пер., 1, стр. 1</span><span style="width:100%;font-size:13.5px;color:var(--mute)">м. Селигерская</span></dd></div>
+        <div class="crow"><dt>Режим работы</dt><dd><span>Ежедневно, 10:00–20:00</span></dd></div>
+        <div class="crow"><dt>Телефон</dt><dd><span id="phoneTxt">+7 (905) 517-99-90</span><button class="copy" data-copy="phoneTxt" type="button">Копировать</button></dd></div>
+        <div class="crow"><dt>Instagram</dt><dd><a href="https://www.instagram.com/rebuild_coloring_workshop/" target="_blank" rel="noopener">@rebuild_coloring_workshop</a></dd></div>
+        <a class="btn btn-block" href="https://yandex.ru/maps/?text=Workshop%20Rebuild%20%26%20Coloring&amp;ll=37.5500%2C55.8650&amp;z=15" target="_blank" rel="noopener">Построить маршрут <span class="arr">→</span></a>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" id="reviews">
+  <div class="wrap">
+    <div class="sec-head rv-head" style="max-width:none">
+      <div style="display:grid;gap:18px"><span class="eyebrow">Отзывы</span><h2>Что говорят клиенты</h2></div>
+      <div class="lb-nav"><button class="icon-btn" id="rvPrev" aria-label="Предыдущий отзыв">←</button><button class="icon-btn" id="rvNext" aria-label="Следующий отзыв">→</button></div>
+    </div>
+    <div class="rv-track" id="rvTrack"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec" id="cta" style="background:var(--graphite);padding-block:clamp(48px,7vw,96px)">
+  <div class="wrap">
+    <div class="cta">
+      <div class="splat" data-splat="cta" aria-hidden="true"></div>
+      <div>
+        <h2>Есть повреждение?<span>Покажите нам автомобиль.</span></h2>
+        <p>Загрузите фото повреждения и получите предварительную оценку стоимости ремонта.</p>
+        <button class="btn" id="ctaBtn" type="button">Рассчитать по фото <span class="arr">→</span></button>
+      </div>
+      <div class="cta-mech mech point idle" id="ctaMech" role="button" tabindex="0" aria-label="Механик Rebuild: открыть загрузку фото"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="sec" id="contact">
+  <div class="wrap cform">
+    <aside>
+      <span class="eyebrow">Запись</span>
+      <h2>Записаться на ремонт</h2>
+      <p style="color:var(--mute);max-width:40ch">Оставьте контакты и опишите, что случилось. Мастер перезвонит, уточнит детали и предложит время осмотра.</p>
+      <ul>
+        <li><i>01</i>Заявка с фото повреждения</li>
+        <li><i>02</i>Звонок мастера и запись на осмотр</li>
+        <li><i>03</i>Точная смета после осмотра</li>
+      </ul>
+    </aside>
+    <form id="cForm" novalidate>
+      <div class="field"><label for="fName">Имя</label><input class="inp" id="fName" name="name" autocomplete="name" placeholder="Как к вам обращаться" required></div>
+      <div class="field"><label for="fPhone">Телефон</label><input class="inp" id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></div>
+      <div class="field"><label for="fBrand">Марка автомобиля</label><input class="inp" id="fBrand" name="brand" list="brands" placeholder="Марка"></div>
+      <div class="field"><label for="fModel">Модель</label><input class="inp" id="fModel" name="model" placeholder="Модель"></div>
+      <div class="field full"><label for="fWhat">Что произошло?</label><textarea class="inp" id="fWhat" name="what" placeholder="Например: задели бампер на парковке, трещина и потёртости"></textarea></div>
+      <div class="field full"><span style="font-size:12.5px;color:var(--mute)">Фото повреждения</span>
+        <label class="fileinp" for="fFile"><input type="file" id="fFile" accept="image/*"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c935e0" stroke-width="1.7" stroke-linecap="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg><span class="t" id="fFileT">Прикрепить фото: камера или галерея</span></label>
+      </div>
+      <button class="btn btn-block full" type="submit">Отправить заявку <span class="arr">→</span></button>
+      <p class="note full" id="cFormMsg" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand"><div class="f-logo" data-logo></div><div class="f-word"><span class="f-script">Workshop</span><small>REBUILD &amp; COLORING</small></div></div>
+    <div class="f-grid">
+      <div><h4>Мастерская</h4><p>Москва, Бескудниковский пер., 1с1</p><p>+7 (905) 517-99-90</p><p>Ежедневно, 10:00–20:00</p><a href="https://www.instagram.com/rebuild_coloring_workshop/" target="_blank" rel="noopener">Instagram</a></div>
+      <div><h4>Навигация</h4><a href="#works">Работы</a><a href="#services">Услуги</a><a href="#ba">До / После</a></div>
+      <div><h4>&nbsp;</h4><a href="#calc">Калькулятор</a><a href="#map">Контакты</a><a href="#contact">Записаться</a></div>
+    </div>
+    <div class="f-bot"><span>© 2026 Rebuild Coloring Workshop</span><span>Кузовной ремонт и покраска · Москва</span></div>
+  </div>
+</footer>
+
+<!-- floating mechanic -->
+<div class="peek right" id="peek" aria-live="polite">
+  <div class="bubble glass" id="peekBubble"></div>
+  <button class="peek-x" id="peekX" aria-label="Скрыть механика">✕</button>
+  <div class="mech idle" id="peekMech" role="button" tabindex="0" aria-label="Механик Rebuild: помочь с оценкой по фото"></div>
+</div>
+<div class="mpanel glass" id="mpanel" hidden role="dialog" aria-label="Помощник механика">
+  <b>Давай посмотрим повреждение</b>
+  <p>Загрузи фото, и я подскажу примерную стоимость. Или сразу запишись на осмотр.</p>
+  <div class="row"><button class="btn" id="mpUpload" type="button">Загрузить фото</button><button class="btn btn-ghost" id="mpSign" type="button">Записаться</button></div>
+  <button class="linkbtn" id="mpLater" type="button" style="margin-top:6px;color:var(--mute)">Позже</button>
+</div>
+
+<div class="walker" id="walker" hidden>
+  <div class="bubble glass" id="walkBubble"></div>
+  <div class="mech" id="walkMech" role="button" tabindex="0" aria-label="Механик Rebuild: записаться или оценить ремонт"></div>
+</div>
+<div id="ovRoot"></div>
+<script>
+(()=>{
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let UID=0;
+
+/* ---------- utils ---------- */
+const hx=h=>{h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16))};
+const toHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const mix=(a,b,t)=>{const A=hx(a),B=hx(b);return toHex(A.map((v,i)=>v+(B[i]-v)*t))};
+const dull=c=>mix(mix(c,'#6b6e72',.38),'#000000',.18);
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f1=n=>Math.round(n*10)/10;
+function smooth(pts,closed=true){
+  const n=pts.length;const g=i=>closed?pts[(i+n)%n]:pts[Math.max(0,Math.min(n-1,i))];
+  let d=`M${f1(pts[0][0])} ${f1(pts[0][1])}`;
+  const last=closed?n:n-1;
+  for(let i=0;i<last;i++){const p0=g(i-1),p1=g(i),p2=g(i+1),p3=g(i+2);
+    d+=`C${f1(p1[0]+(p2[0]-p0[0])/6)} ${f1(p1[1]+(p2[1]-p0[1])/6)} ${f1(p2[0]-(p3[0]-p1[0])/6)} ${f1(p2[1]-(p3[1]-p1[1])/6)} ${f1(p2[0])} ${f1(p2[1])}`}
+  return d+(closed?'Z':'');
+}
+function blob(cx,cy,rx,ry,n,j,r){const p=[];for(let i=0;i<n;i++){const a=i/n*Math.PI*2,k=1-j/2+r()*j;p.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return smooth(p)}
+const rub=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+
+/* ---------- car illustration ---------- */
+const ARCH=(a,b,r)=>`L${a} 246 L${a} 236 A${r} ${r} 0 0 0 ${b} 236 L${b} 246`;
+const SHAPES={
+  sedan:{
+    body:`M62 246 L52 206 Q50 172 70 164 L120 156 Q200 150 238 148 Q290 104 340 94 L470 92 Q536 104 598 148 Q676 156 724 168 Q754 176 758 198 L760 228 Q758 244 742 246 ${ARCH(674,546,64)} ${ARCH(254,126,64)} Z`,
+    glass:'M254 148 Q296 108 342 100 L466 98 Q522 110 578 148 Z',
+    pillars:['M410 99 L412 148'],
+    doors:['M268 152 Q264 200 272 240','M412 150 L414 242','M562 152 Q570 200 548 240'],
+    handles:[[300,170],[442,170]],
+    shoulder:'M76 170 Q300 158 724 172',
+    mirror:'M568 146 q12 -9 24 -2 l-3 9 h-19z',
+    head:'M714 170 Q742 172 756 186 L736 190 Q720 184 714 170Z',
+    tail:'M54 176 L86 168 L88 180 L56 190Z',
+    intake:'M726 222 L758 222 L756 238 L730 238Z',
+    belt:150,wr:54,
+    A:{door:[420,200],fender:[706,202],hood:[650,160],bumper:[742,214],roof:[400,100]}
+  },
+  coupe:{
+    body:`M64 246 L54 206 Q52 180 74 168 Q120 152 214 142 Q292 98 372 90 L468 92 Q530 106 596 148 Q672 156 722 168 Q752 176 758 198 L760 228 Q758 244 742 246 ${ARCH(674,546,64)} ${ARCH(254,126,64)} Z`,
+    glass:'M238 144 Q300 104 372 97 L464 99 Q520 111 574 147 Z',
+    pillars:[],
+    doors:['M300 150 Q294 200 300 240','M550 152 Q560 200 546 240'],
+    handles:[[332,170]],
+    shoulder:'M80 172 Q300 160 722 172',
+    mirror:'M560 146 q12 -9 24 -2 l-3 9 h-19z',
+    head:'M716 170 Q744 173 756 188 L736 191 Q721 185 716 170Z',
+    tail:'M56 182 L92 172 L94 182 L58 194Z',
+    intake:'M726 222 L758 222 L756 238 L730 238Z',
+    belt:148,wr:54,
+    A:{door:[424,200],fender:[708,202],hood:[652,160],bumper:[744,214],roof:[420,98]}
+  },
+  suv:{
+    body:`M60 246 L50 200 L52 150 Q54 120 80 114 L170 106 Q200 78 236 72 L500 70 Q548 76 606 128 Q690 136 734 148 Q760 156 762 186 L762 226 Q760 244 744 246 ${ARCH(676,544,66)} ${ARCH(256,124,66)} Z`,
+    glass:'M182 128 L206 88 Q216 80 240 80 L494 78 Q534 84 586 128 Z',
+    pillars:['M330 79 L330 130','M456 78 L456 130'],
+    doors:['M240 132 Q234 190 252 240','M456 132 L458 242','M594 134 Q600 190 556 240'],
+    handles:[[282,154],[492,154]],
+    shoulder:'M58 152 Q300 140 740 154',
+    mirror:'M590 126 q12 -9 24 -2 l-3 9 h-19z',
+    head:'M726 150 Q752 152 760 168 L740 172 Q728 166 726 150Z',
+    tail:'M50 160 L66 156 L68 188 L52 192Z',
+    intake:'M728 220 L760 220 L758 238 L732 238Z',
+    belt:130,wr:57,
+    A:{door:[392,186],fender:[714,196],hood:[662,140],bumper:[748,212],roof:[360,74]}
+  }
+};
+
+SHAPES.sedan.trim=[256,576,148];SHAPES.coupe.trim=[240,572,146];SHAPES.suv.trim=[184,584,128];
+SHAPES.sedan.arch=64;SHAPES.coupe.arch=64;SHAPES.suv.arch=66;
+
+function wheel(cx,cy,R,u){
+  let spokes='';for(let i=0;i<10;i++){const a=i*36;
+    spokes+=`<rect x="-1.4" y="${-R*.6}" width="5.6" height="${R*.47}" rx="2.4" fill="#000" opacity=".55" transform="rotate(${a+3})"/><rect x="-2.8" y="${-R*.6}" width="5.6" height="${R*.47}" rx="2.4" fill="url(#${u}m)" transform="rotate(${a})"/>`}
+  const rc=R*.44,a1=-58*Math.PI/180,a2=2*Math.PI/180;
+  let holes='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180;holes+=`<circle cx="${f1(Math.cos(a)*R*.42)}" cy="${f1(Math.sin(a)*R*.42)}" r="1.3" fill="#1b1d20"/>`}
+  return `<g transform="translate(${cx} ${cy})">
+   <circle r="${R}" fill="url(#${u}ty)"/>
+   <circle r="${R-4}" fill="none" stroke="#202226" stroke-width="2" stroke-dasharray="3 3" opacity=".7"/>
+   <circle r="${R*.86}" fill="none" stroke="#17191c" stroke-width="5"/>
+   <path d="M${-R*.8} ${-R*.42} A${R*.9} ${R*.9} 0 0 1 ${R*.8} ${-R*.42}" stroke="#fff" stroke-opacity=".07" stroke-width="3" fill="none"/>
+   <circle r="${R*.69}" fill="#0a0e0d"/>
+   <circle r="${R*.56}" fill="url(#${u}dk)"/>${holes}
+   <path d="M${f1(Math.cos(a1)*rc)} ${f1(Math.sin(a1)*rc)} A${rc} ${rc} 0 0 1 ${f1(Math.cos(a2)*rc)} ${f1(Math.sin(a2)*rc)}" stroke="#b03ad8" stroke-width="9" fill="none" stroke-linecap="round"/>
+   <g class="rim">${spokes}<circle r="${R*.66}" fill="none" stroke="url(#${u}m)" stroke-width="3.4"/><circle r="${R*.62}" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="1"/><circle r="9" fill="url(#${u}m)"/><circle r="4.5" fill="#15171a"/><circle r="1.8" fill="#c935e0"/></g>
+   <circle r="${R*.66}" fill="url(#${u}rs)"/>
+  </g>`;
+}
+
+function damage(w,S,u){
+  const r=rng(w.seed||1); let o='',defs='',k=0;
+  const PRIM='#8e918d';
+  const tex=(d,bb,freq,a,b,col,op,oct=3)=>{const id=`${u}k${k++}`;
+    defs+=`<clipPath id="${id}"><path d="${d}"/></clipPath><filter id="${id}f" x="${bb[0]}" y="${bb[1]}" width="${bb[2]}" height="${bb[3]}" filterUnits="userSpaceOnUse"><feTurbulence type="fractalNoise" baseFrequency="${freq}" numOctaves="${oct}" seed="${Math.floor(r()*999)}"/><feColorMatrix values="0 0 0 0 ${col[0]} 0 0 0 0 ${col[1]} 0 0 0 0 ${col[2]} ${a} 0 0 0 ${b}"/></filter>`;
+    o+=`<g clip-path="url(#${id})" opacity="${op}"><rect x="${bb[0]}" y="${bb[1]}" width="${bb[2]}" height="${bb[3]}" filter="url(#${id}f)"/></g>`};
+  const bbox=(cx,cy,rx,ry)=>[cx-rx*1.3,cy-ry*1.3,rx*2.6,ry*2.6];
+  const scr=(cx,cy,W,H,n,deep)=>{for(let i=0;i<n;i++){let x=cx-W/2+r()*W*.3,y=cy-H/2+r()*H;const L=W*(.3+r()*.65),seg=7;let d=`M${f1(x)} ${f1(y)}`;const sl=(r()-.5)*.18;
+      for(let j=0;j<seg;j++){x+=L/seg;y+=sl*L/seg+(r()-.5)*1.4;d+=` L${f1(x)} ${f1(y)}`}
+      const wd=f1(.5+r()*.9);
+      o+=`<path d="${d}" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="${f1(wd*4)}" filter="url(#${u}sb)"/>`;
+      o+=`<path d="${d}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${f1(wd*1.6)}" transform="translate(.4 1)"/>`;
+      o+=`<path d="${d}" fill="none" stroke="#f1f3f5" stroke-opacity=".9" stroke-width="${wd}" stroke-linecap="round"/>`;
+      if(deep&&r()>.35)o+=`<path d="${d}" fill="none" stroke="${PRIM}" stroke-width="${f1(wd*1.8)}" stroke-dasharray="${f1(3+r()*10)} ${f1(8+r()*18)}" stroke-linecap="round"/>`;
+      for(let j=0;j<3;j++)o+=`<path d="M${f1(cx-W/2+r()*W)} ${f1(cy-H/2+r()*H)} l${f1(6+r()*18)} ${f1((r()-.5)*3)}" stroke="#fff" stroke-opacity=".35" stroke-width=".5"/>`}};
+  const chips=(cx,cy,sp,n)=>{for(let i=0;i<n;i++){const x=cx+(r()-.5)*sp,y=cy+(r()-.5)*sp*.45,s=1.2+r()*3.2,d=blob(x,y,s,s*.75,7,.9,r);
+      o+=`<path d="${d}" fill="#000" opacity=".45" transform="translate(.6 .8)"/><path d="${d}" fill="${r()>.45?PRIM:'#dfe2e4'}"/>`}};
+  const dent=(cx,cy,rx,ry)=>{
+    o+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx*1.25}" ry="${ry*1.3}" fill="url(#${u}d)"/>`;
+    o+=`<path d="M${cx-rx*1.5} ${cy-ry*.25} C${cx-rx*.6} ${cy-ry*.25} ${cx-rx*.55} ${cy+ry*.95} ${cx} ${cy+ry*.85} C${cx+rx*.55} ${cy+ry*.75} ${cx+rx*.6} ${cy-ry*.25} ${cx+rx*1.5} ${cy-ry*.25}" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" fill="none" filter="url(#${u}sb)"/>`;
+    o+=`<path d="M${cx-rx*1.4} ${cy+ry*.2} C${cx-rx*.6} ${cy+ry*.2} ${cx-rx*.4} ${cy+ry*1.2} ${cx+rx*.1} ${cy+ry*1.1} C${cx+rx*.6} ${cy+ry} ${cx+rx*.7} ${cy+ry*.2} ${cx+rx*1.4} ${cy+ry*.2}" stroke="#000" stroke-opacity=".35" stroke-width="3" fill="none" filter="url(#${u}sb)"/>`;
+    o+=`<path d="M${cx-rx*.75} ${cy-ry*.1} Q${cx-rx*.1} ${cy+ry*.35} ${cx+rx*.8} ${cy-ry*.2}" stroke="#000" stroke-opacity=".6" stroke-width="1.2" fill="none"/><path d="M${cx-rx*.7} ${cy-ry*.1+1.4} Q${cx-rx*.1} ${cy+ry*.35+1.4} ${cx+rx*.75} ${cy-ry*.2+1.4}" stroke="#fff" stroke-opacity=".3" stroke-width=".8" fill="none"/>`;
+    chips(cx,cy+ry*.1,rx*.9,4)};
+  const crack=(x,y,n,dx,dy,wd=1.6)=>{let d=`M${x} ${y}`;const pts=[];for(let i=0;i<n;i++){x+=dx+(r()-.5)*6;y+=dy+(r()-.5)*6;pts.push([x,y]);d+=` L${f1(x)} ${f1(y)}`}
+    o+=`<path d="${d}" stroke="#fff" stroke-opacity=".35" stroke-width="${wd*2.6}" fill="none" filter="url(#${u}sb)"/><path d="${d}" stroke="#050506" stroke-width="${wd}" fill="none" stroke-linejoin="bevel"/>`;
+    pts.forEach(p=>{if(r()>.5)o+=`<path d="M${f1(p[0])} ${f1(p[1])} l${f1((r()-.5)*14)} ${f1((r()-.5)*10)}" stroke="#050506" stroke-width="${wd*.6}"/>`})};
+  const scuff=(cx,cy,rx,ry)=>{const d=blob(cx,cy,rx,ry,11,.55,r);const bb=bbox(cx,cy,rx,ry);
+    tex(d,bb,.06,2.6,-1.0,[.56,.57,.55],1,2);tex(d,bb,1.1,1.8,-.55,[.85,.86,.86],.9);tex(d,bb,.9,1.6,-.7,[0,0,0],.6)};
+  const A=S.A;
+  (w.dmg||[]).forEach(t=>{
+    if(t==='scratch')scr(A.door[0]-30,A.door[1]-6,260,44,7,true);
+    if(t==='dent'){dent(A.door[0]+10,A.door[1]+2,46,20);scr(A.door[0]+20,A.door[1],130,18,3,true)}
+    if(t==='bumper'){const bx=A.bumper[0],by=A.bumper[1];
+      o+=`<path d="${blob(bx-6,by+6,30,22,9,.4,r)}" fill="url(#${u}d)"/>`;
+      scuff(bx-8,by+8,26,16);crack(bx+14,by-16,5,-4,7);crack(bx-4,by+2,4,-8,3,1.2);
+      o+=`<path d="M${bx-36} ${by-26} L${bx-38} ${by+30}" stroke="#000" stroke-width="3.2" stroke-opacity=".85"/><path d="M${bx-34} ${by-24} L${bx-35} ${by+30}" stroke="#fff" stroke-opacity=".25"/>`;
+      chips(bx-6,by,40,9);scr(bx-40,by+12,70,12,4,true)}
+    if(t==='fender'){dent(A.fender[0],A.fender[1],26,15);crack(A.fender[0]-8,A.fender[1]-4,3,7,2,1)}
+    if(t==='hood'){scr(A.hood[0]-12,A.hood[1]+1,130,9,7,true);chips(A.hood[0],A.hood[1],70,8);scuff(A.hood[0]+30,A.hood[1]+3,16,5)}
+    if(t==='fade'){const top=10,bot=S.belt+36;const band=`M0 ${top} H820 V${bot} H0Z`;
+      tex(band,[0,top,820,bot-top],.011,2.2,-.85,[.92,.93,.9],.32,3);tex(band,[0,top,820,bot-top],.9,1.2,-.62,[1,1,1],.28);
+      chips(A.door[0],A.door[1],300,18);scr(A.door[0],A.door[1]+12,220,30,4,true)}
+    if(t==='crash'){const bx=A.bumper[0],by=A.bumper[1];
+      let fx=bx-64;for(let i=0;i<7;i++){const x0=fx,x1=fx+10+r()*10,ya=by-48+r()*8,yb=by+30-r()*10;
+        o+=`<path d="M${f1(x0)} ${f1(ya)} L${f1(x1)} ${f1(ya+4+r()*8)} L${f1(x1-4+r()*8)} ${f1(yb)} L${f1(x0+2)} ${f1(yb-4)}Z" fill="${i%2?'#000':'#fff'}" fill-opacity="${i%2?.38:.16}"/>`;fx=x1}
+      o+=`<path d="M${bx-70} ${by-52} Q${bx-30} ${by-70} ${bx+10} ${by-48}" stroke="#000" stroke-opacity=".6" stroke-width="3" fill="none"/>`;
+      scuff(A.fender[0]-22,A.fender[1]-8,34,18);
+      o+=`<path d="${blob(A.fender[0]-22,A.fender[1]-8,20,10,9,.5,r)}" fill="${PRIM}" opacity=".9"/>`;
+      crack(bx+4,by-44,4,-8,6);crack(bx+12,by-8,4,-6,9);
+      o+=`<path d="M${bx-36} ${by+12} L${bx+18} ${by+18} L${bx+14} ${by+36} L${bx-32} ${by+32}Z" fill="#141517" transform="rotate(8 ${bx} ${by+20})"/><path d="M${bx-36} ${by+12} L${bx+18} ${by+18}" stroke="#fff" stroke-opacity=".25" transform="rotate(8 ${bx} ${by+20})"/>`;
+      chips(bx-30,by-20,80,14);scr(A.door[0]+90,A.door[1]+4,200,30,5,true);dent(A.door[0]+160,A.door[1]+6,40,18)}
+  });
+  return {o,defs};
+}
+
+function car(w,u,mode,hero){
+  const S=SHAPES[w.shape],before=mode==='before',p=before?dull(w.paint):w.paint;
+  const lum=hx(p).reduce((a,b)=>a+b,0)/765;
+  const top=mix(p,'#ffffff',lum>.7?.12:.32), m2=mix(p,'#000000',.25), bot=mix(p,'#000000',.62);
+  const wr=S.wr,ar=S.arch;
+  const dm=before?damage(w,S,u):{o:'',defs:''};
+  const crashed=before&&(w.dmg||[]).includes('crash');
+  const liner=(cx)=>`<path d="M${cx-ar} 247 L${cx-ar} 236 A${ar} ${ar} 0 0 1 ${cx+ar} 236 L${cx+ar} 247Z" fill="url(#${u}al)"/>`;
+  const [tx0,tx1,ty]=S.trim;
+  return `<defs>
+    <linearGradient id="${u}p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset=".3" stop-color="${p}"/><stop offset=".56" stop-color="${m2}"/><stop offset=".6" stop-color="${mix(p,'#ffffff',.12)}"/><stop offset=".78" stop-color="${p}"/><stop offset="1" stop-color="${bot}"/></linearGradient>
+    <linearGradient id="${u}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a535e"/><stop offset=".35" stop-color="#1a1f25"/><stop offset="1" stop-color="#050709"/></linearGradient>
+    <linearGradient id="${u}r" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity="${before?.06:.34}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="${u}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="${before?.08:.2}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="${u}env" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".05"/><stop offset=".5" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient>
+    <linearGradient id="${u}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f7f9"/><stop offset=".45" stop-color="#8a9199"/><stop offset=".7" stop-color="#d5dade"/><stop offset="1" stop-color="#6c737b"/></linearGradient>
+    <radialGradient id="${u}ty" r=".5"><stop offset=".6" stop-color="#131816"/><stop offset=".85" stop-color="#0b0c0d"/><stop offset="1" stop-color="#030304"/></radialGradient>
+    <radialGradient id="${u}dk" r=".5"><stop offset="0" stop-color="#6d727a"/><stop offset=".7" stop-color="#3c4046"/><stop offset="1" stop-color="#25282c"/></radialGradient>
+    <radialGradient id="${u}rs" cx=".35" cy=".3" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${u}al" cx=".5" cy="1" r=".9"><stop offset="0" stop-color="#000"/><stop offset=".7" stop-color="#0a0b0c"/><stop offset="1" stop-color="#1a1c1f"/></radialGradient>
+    <linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fb0c2"/><stop offset=".5" stop-color="#eef4fb"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+    <radialGradient id="${u}d" cx=".5" cy=".5" fx=".38" fy=".3" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".62"/><stop offset=".45" stop-color="#000" stop-opacity=".3"/><stop offset=".72" stop-color="#fff" stop-opacity=".1"/><stop offset=".88" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <clipPath id="${u}c"><path d="${S.body}"/></clipPath><clipPath id="${u}gc"><path d="${S.glass}"/></clipPath>
+    <filter id="${u}glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="${u}sb" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>
+    <filter id="${u}ao" x="-10%" y="-100%" width="120%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>
+    ${dm.defs}
+  </defs>
+  <g id="${u}car">
+    <rect x="120" y="238" width="580" height="14" fill="#000" opacity=".8" filter="url(#${u}ao)"/>
+    ${liner(190)}${liner(610)}
+    ${!before?`<ellipse class="hl" cx="${S.A.bumper[0]+30}" cy="${S.A.bumper[1]-30}" rx="40" ry="10" fill="#dfe9ff" opacity=".35" filter="url(#${u}glow)"/>`:''}
+    <path d="${S.body}" fill="url(#${u}p)"/>
+    <g clip-path="url(#${u}c)">
+      <rect x="0" y="0" width="820" height="${S.belt+30}" fill="url(#${u}sky)"/>
+      <rect x="0" y="${S.belt+44}" width="820" height="110" fill="url(#${u}env)"/>
+      <rect x="0" y="${S.belt+41}" width="820" height="4" fill="#fff" opacity="${before?.06:.22}" filter="url(#${u}sb)"/>
+      <rect x="0" y="${S.belt+43}" width="820" height="1.2" fill="#fff" opacity="${before?.1:.45}"/>
+      <rect x="0" y="236" width="820" height="12" fill="#000" opacity=".35"/>
+      <path d="${S.shoulder}" stroke="#fff" stroke-opacity="${before?.1:.4}" stroke-width="1.4" fill="none"/>
+      <path d="${S.shoulder}" stroke="#000" stroke-opacity=".25" stroke-width="1.4" fill="none" transform="translate(0 3)"/>
+      <g transform="skewX(-22)"><rect class="sweep" x="${hero?-160:420}" y="0" width="${hero?220:130}" height="300" fill="url(#${u}r)"/></g>
+      ${hero?`<g transform="skewX(-22)"><rect x="520" y="0" width="90" height="300" fill="url(#${u}r)" opacity=".5"/></g>`:''}
+      ${S.doors.map(d=>`<path d="${d}" stroke="rgba(0,0,0,.6)" stroke-width="1.5" fill="none"/><path d="${d}" stroke="rgba(255,255,255,.14)" stroke-width=".9" fill="none" transform="translate(1.5 0)"/>`).join('')}
+      ${dm.o}
+    </g>
+    <path d="${S.glass}" fill="url(#${u}g)" stroke="#050607" stroke-width="2.4"/>
+    <g clip-path="url(#${u}gc)"><path d="M300 60 L370 60 L290 170 L220 170Z" fill="#fff" opacity=".08"/><path d="M386 60 L404 60 L324 170 L306 170Z" fill="#fff" opacity=".05"/><rect x="0" y="${ty-12}" width="820" height="12" fill="#000" opacity=".35"/></g>
+    <path d="M${tx0} ${ty} L${tx1} ${ty}" stroke="url(#${u}m)" stroke-width="2"/>
+    ${S.pillars.map(d=>`<path d="${d}" stroke="#07090b" stroke-width="7"/>`).join('')}
+    ${S.handles.map(h=>`<rect x="${h[0]}" y="${h[1]}" width="26" height="4.5" rx="2.2" fill="${mix(p,'#000',.45)}"/><rect x="${h[0]}" y="${h[1]}" width="26" height="1.4" rx=".7" fill="rgba(255,255,255,.4)"/>`).join('')}
+    <path d="${S.mirror}" fill="${mix(p,'#000',.3)}"/><path d="${S.mirror}" fill="none" stroke="#fff" stroke-opacity=".2"/>
+    <path class="hl" d="${S.head}" fill="url(#${u}h)" stroke="rgba(0,0,0,.5)"/>
+    ${crashed?`<path d="${S.head}" fill="#0a0e0d" opacity=".72"/><path d="M${S.A.bumper[0]-26} ${S.A.bumper[1]-46} l10 8 l-4 6 l12 4" stroke="#fff" stroke-opacity=".55" stroke-width=".8" fill="none"/>`:''}
+    <path d="${S.tail}" fill="${before?'#6e1a1d':'#c3161d'}"/><path d="${S.tail}" fill="#ff5a4f" opacity="${before?0:.35}" filter="url(#${u}glow)"/><path d="${S.tail}" fill="none" stroke="#000" stroke-opacity=".5"/>
+    <path d="${S.intake}" fill="#0b0c0e"/><path d="${S.intake}" fill="none" stroke="#272e2b" stroke-dasharray="2 3"/>
+    ${wheel(190,236,wr,u)}${wheel(610,236,wr,u)}
+  </g>`;
+}
+
+function scene(w,mode,opts={}){
+  if(w.img&&w.img[mode])return `<img src="${w.img[mode]}" alt="${w.title}, ${mode==='before'?'до ремонта':'после ремонта'}" loading="lazy">`;
+  const u='c'+(++UID),before=mode==='before';
+  const bg=before
+    ?`<radialGradient id="${u}bg" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#272e2b"/><stop offset=".6" stop-color="#131816"/><stop offset="1" stop-color="#0a0e0d"/></radialGradient>`
+    :`<radialGradient id="${u}bg" cx=".5" cy=".18" r=".85"><stop offset="0" stop-color="#22302c"/><stop offset=".55" stop-color="#101816"/><stop offset="1" stop-color="#070c0b"/></radialGradient>`;
+  let walls='';for(let x=40;x<820;x+=82)walls+=`<line x1="${x}" y1="0" x2="${x}" y2="352" stroke="#fff" stroke-opacity="${before?.035:.025}"/>`;
+  const lights=[60,250,440,630].map(x=>`<rect x="${x}" y="10" width="130" height="5" rx="2.5" fill="#eef3f8" opacity=".9"/><rect x="${x-10}" y="6" width="150" height="12" rx="6" fill="#dbe8ff" opacity=".35" filter="url(#${u}bl)"/>`).join('');
+  return `<svg viewBox="0 0 820 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+   <defs>${bg}
+    <linearGradient id="${u}fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${before?'#181d1b':'#131a18'}"/><stop offset="1" stop-color="#070c0b"/></linearGradient>
+    <linearGradient id="${u}mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="${u}mk"><rect x="0" y="352" width="820" height="68" fill="url(#${u}mg)"/></mask>
+    <filter id="${u}bl" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="${u}gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="${UID}"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 ${before?'.11':'.07'} 0"/></filter>
+    <radialGradient id="${u}vg" cx=".5" cy=".55" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
+   </defs>
+   <rect width="820" height="420" fill="url(#${u}bg)"/>${walls}${lights}
+   <rect y="352" width="820" height="68" fill="url(#${u}fl)"/><line x1="0" y1="352" x2="820" y2="352" stroke="#fff" stroke-opacity=".06"/>
+   ${before?'':`<ellipse cx="410" cy="372" rx="330" ry="20" fill="#cfe0ff" opacity=".05"/>`}
+   <ellipse cx="410" cy="354" rx="350" ry="10" fill="#000" opacity=".8" filter="url(#${u}bl)"/>
+   <g transform="${w.flip?'translate(816 62) scale(-1 1)':'translate(4 62)'}">${car(w,u,mode)}</g>
+   ${before?'':`<g mask="url(#${u}mk)"><g transform="${w.flip?'translate(816 766) scale(-1 -1)':'translate(4 766) scale(1 -1)'}" opacity=".22"><use href="#${u}car"/></g></g>`}
+   <rect width="820" height="420" fill="url(#${u}vg)"/><rect width="820" height="420" filter="url(#${u}gr)"/>
+  </svg>`;
+}
+
+function heroSVG(){
+  const u='h'+(++UID);
+  const w={shape:'coupe',paint:'#1e3d78'};
+  return `<svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg">
+   <defs><linearGradient id="${u}mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+   <mask id="${u}mk"><rect x="0" y="330" width="820" height="90" fill="url(#${u}mg)"/></mask>
+   <filter id="${u}bl" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs>
+   <g class="carMove">
+    <ellipse cx="410" cy="332" rx="360" ry="12" fill="#000" opacity=".85" filter="url(#${u}bl)"/>
+    <g transform="translate(4 40)">${car(w,u,'after',true)}</g>
+    <g class="reflect" mask="url(#${u}mk)"><g transform="translate(4 702) scale(1 -1)" opacity=".2"><use href="#${u}car"/></g></g>
+   </g>
+  </svg>`;
+}
+
+/* ---------- data ---------- */
+const WORKS=[
+ {id:'w1',shape:'sedan',paint:'#1f3f7a',title:'Седан бизнес-класса',color:'Синий металлик',damage:'Вмятина и царапины на дверях',works:'Рихтовка, шпатлёвка, покраска двух дверей, полировка',result:'Геометрия восстановлена, цвет в тон без переходов',dmg:['dent','scratch'],cats:['ba','body'],seed:3},
+ {id:'w2',flip:1,shape:'coupe',paint:'#9b1c24',title:'Спортивное купе',color:'Красный',damage:'Трещина и потёртости переднего бампера',works:'Пайка пластика, подготовка, покраска бампера',result:'Бампер без следов ремонта, зазоры в норме',dmg:['bumper'],cats:['ba','paint'],seed:7},
+ {id:'w3',flip:1,shape:'suv',paint:'#b9bec4',title:'Кроссовер',color:'Серебристый',damage:'ДТП: бампер, крыло, фара, дверь',works:'Восстановление крыла и креплений, покраска 3 элементов',result:'Передняя часть восстановлена после удара',dmg:['crash'],cats:['ba','dtp','body'],seed:11},
+ {id:'w4',shape:'sedan',paint:'#141619',title:'Седан представительского класса',color:'Чёрный',damage:'Глубокие царапины на капоте и дверях',works:'Локальная покраска, подбор цвета, финишная полировка',result:'Глубокий чёрный без голограмм',dmg:['hood','scratch'],cats:['ba','paint'],seed:5},
+ {id:'w5',flip:1,shape:'coupe',paint:'#e4e1d8',title:'Купе',color:'Белый перламутр',damage:'Вмятина на переднем крыле',works:'Рихтовка, покраска крыла',result:'Перламутр совпадает с соседними деталями',dmg:['fender'],cats:['ba','body'],seed:9},
+ {id:'w6',shape:'suv',paint:'#2f3d2c',title:'Внедорожник',color:'Тёмно-зелёный',damage:'Выгоревший лак, сколы по кузову',works:'Полная перекраска, полировка',result:'Ровный цвет и блеск по всему кузову',dmg:['fade'],cats:['ba','paint'],seed:13},
+];
+const EXTRA=[
+ {id:'g1',shape:'coupe',paint:'#3c2b66',title:'Купе',color:'Фиолетовый металлик',cats:['paint']},
+ {id:'g2',shape:'suv',paint:'#5c1219',title:'Кроссовер',color:'Бордовый',cats:['body']},
+ {id:'g3',shape:'sedan',paint:'#6f767e',title:'Седан',color:'Графит',cats:['dtp','body']},
+];
+const GALLERY=[{...WORKS[0],big:1},EXTRA[0],WORKS[1],WORKS[2],EXTRA[1],WORKS[5],WORKS[3],WORKS[4],EXTRA[2]];
+const CAT={ba:'До / После',paint:'Покраска',body:'Кузовной ремонт',dtp:'ДТП'};
+
+/* ---------- hero ---------- */
+/* brand logo (redrawn: splatter is procedural, lettering in Yellowtail) */
+function logoSVG(){
+  const u='lg'+(++UID),r=rng(19),cols=['#ff2e93','#22c3ee','#8cff3a','#ffd23a','#ff2e93','#22c3ee','#8cff3a','#ffd23a'];let sp='';
+  for(let i=0;i<54;i++){const c=cols[i%cols.length],x=r()*400,y=r()*400,s=2+r()*9;
+    sp+=`<path d="${blob(x,y,s*(1+r()),s,8,.7,r)}" fill="${c}"/>`;
+    const n=2+Math.floor(r()*6);for(let k=0;k<n;k++){const a=r()*6.28,d=s*(1.6+r()*3.5),q=.8+r()*2.4;sp+=`<circle cx="${f1(x+Math.cos(a)*d)}" cy="${f1(y+Math.sin(a)*d)}" r="${f1(q)}" fill="${c}"/>`}
+    if(r()>.45){const a=r()*6.28,L=25+r()*80,x2=x+Math.cos(a)*L,y2=y+Math.sin(a)*L;sp+=`<path d="M${f1(x)} ${f1(y)} Q${f1((x+x2)/2+(r()-.5)*30)} ${f1((y+y2)/2+(r()-.5)*30)} ${f1(x2)} ${f1(y2)}" stroke="${c}" stroke-width="${f1(1.2+r()*3)}" fill="none" stroke-linecap="round"/>`}}
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Логотип Workshop Rebuild &amp; Coloring">
+   <defs><clipPath id="${u}c"><circle cx="200" cy="200" r="198"/></clipPath>
+   <radialGradient id="${u}v" r=".55"><stop offset=".55" stop-color="#000" stop-opacity=".0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+   <path id="${u}tp" d="M74 289 C150 312 250 304 342 256"/></defs>
+   <circle cx="200" cy="200" r="198" fill="#0a0a0c"/>
+   <g clip-path="url(#${u}c)" opacity=".95">${sp}<rect width="400" height="400" fill="url(#${u}v)"/></g>
+   <circle cx="200" cy="200" r="197" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
+   <path d="M46 270 C130 304 240 302 336 240 C346 234 356 228 366 222 C358 236 352 248 350 262 C252 334 128 330 40 290 C40 282 42 276 46 270 Z" fill="#fff" stroke="#0a0a0c" stroke-width="5" paint-order="stroke"/>
+   <text font-family="Yellowtail, 'Brush Script MT', cursive" font-size="37" fill="#0a0a0c" letter-spacing=".5"><textPath href="#${u}tp" startOffset="50%" text-anchor="middle" textLength="236" lengthAdjust="spacingAndGlyphs">Rebuild &amp; Coloring</textPath></text>
+   <text x="204" y="226" text-anchor="middle" font-family="Yellowtail, 'Brush Script MT', cursive" font-size="122" textLength="318" lengthAdjust="spacingAndGlyphs" fill="#fff" stroke="#0a0a0c" stroke-width="10" paint-order="stroke" transform="rotate(-6 204 200)">Workshop</text>
+  </svg>`;
+}
+$$('[data-logo]').forEach(el=>el.innerHTML=logoSVG());
+function splatSVG(seed,n){const r=rng(seed),cols=['#ff2d8a','#1ec8ea','#9dff3b','#8a5cff','#ffd23a','#ff2d8a'];let o='';
+  for(let i=0;i<n;i++){const c=cols[i%cols.length],x=r()*1600,y=r()*900,s=2+r()*8;o+=`<path d="${blob(x,y,s*(1+r()),s,8,.7,r)}" fill="${c}"/>`;
+    for(let k=0,m=2+Math.floor(r()*5);k<m;k++){const a=r()*6.28,d=s*(1.8+r()*4);o+=`<circle cx="${f1(x+Math.cos(a)*d)}" cy="${f1(y+Math.sin(a)*d)}" r="${f1(.6+r()*2)}" fill="${c}"/>`}
+    if(r()>.5){const a=r()*6.28,L=30+r()*120,x2=x+Math.cos(a)*L,y2=y+Math.sin(a)*L;o+=`<path d="M${f1(x)} ${f1(y)} Q${f1((x+x2)/2+(r()-.5)*50)} ${f1((y+y2)/2+(r()-.5)*50)} ${f1(x2)} ${f1(y2)}" stroke="${c}" stroke-width="${f1(.8+r()*2.4)}" fill="none" stroke-linecap="round"/>`}}
+  return `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${o}</svg>`}
+$$('[data-splat]').forEach((el,i)=>el.innerHTML=splatSVG(31+i*7,el.dataset.splat==='cta'?70:90));
+/* hero photo switcher */
+const heroImg=$('#heroImg');
+$$('.hthumb').forEach(b=>b.addEventListener('click',()=>{if(b.getAttribute('aria-pressed')==='true')return;
+  $$('.hthumb').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  const pre=new Image();pre.src=b.dataset.src;heroImg.classList.add('swap');
+  const go=()=>{heroImg.src=b.dataset.src;heroImg.style.objectPosition=b.dataset.pos;requestAnimationFrame(()=>heroImg.classList.remove('swap'))};
+  const t0=performance.now();pre.onload=()=>setTimeout(go,Math.max(0,300-(performance.now()-t0)));pre.onerror=go}));
+
+/* ---------- theme ---------- */
+const root=document.documentElement;
+try{const t=localStorage.getItem('rb-theme');if(t==='light'||t==='dark')root.setAttribute('data-theme',t)}catch(_){}
+const curTheme=()=>root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+const tbtn=$('#themeBtn');
+const tLabel=()=>tbtn.setAttribute('aria-label',curTheme()==='light'?'Включить тёмную тему':'Включить светлую тему');
+tLabel();
+tbtn.addEventListener('click',()=>{const n=curTheme()==='light'?'dark':'light';root.setAttribute('data-theme',n);try{localStorage.setItem('rb-theme',n)}catch(_){}tLabel()});
+matchMedia('(prefers-color-scheme: light)').addEventListener('change',tLabel);
+
+/* ---------- nav ---------- */
+const nav=$('#nav');
+const mm=$('#mmenu'),bg=$('#burger');
+bg.onclick=()=>{mm.hidden=false;bg.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'};
+const closeMM=()=>{mm.hidden=true;bg.setAttribute('aria-expanded','false');document.body.style.overflow=''};
+$('#mclose').onclick=closeMM;$$('a',mm).forEach(a=>a.addEventListener('click',closeMM));
+
+/* ---------- before/after ---------- */
+function bindBA(stage){
+  const range=$('.ba-range',stage);
+  const set=v=>stage.style.setProperty('--pos',v+'%');
+  range.addEventListener('input',()=>{set(range.value);stage.classList.add('touched')});
+  range.addEventListener('pointerdown',()=>stage.classList.add('drag'));
+  addEventListener('pointerup',()=>stage.classList.remove('drag'));
+  return {set:v=>{range.value=v;set(v)},range};
+}
+const baStage=$('#baStage'),BA=bindBA(baStage);
+let baIdx=0;
+function showBA(i,anim=true){
+  baIdx=i;const w=WORKS[i];const b=$('#baBefore'),a=$('#baAfter');
+  const put=()=>{b.innerHTML=scene(w,'before');a.innerHTML=scene(w,'after');b.classList.remove('fading');a.classList.remove('fading')};
+  if(anim&&!RM){b.classList.add('fading');a.classList.add('fading');setTimeout(put,280)}else put();
+  $$('.case').forEach((c,k)=>c.setAttribute('aria-pressed',k===i?'true':'false'));
+}
+$('#baGrid').innerHTML=WORKS.map((w,i)=>`<button class="case" type="button" data-i="${i}" aria-pressed="false">
+  <div class="case-thumb">${scene(w,'after')}<span class="case-num">Кейс ${String(i+1).padStart(2,'0')}</span></div>
+  <div class="case-body"><h3>${w.title}</h3><dl>
+   <div><dt>Авто</dt><dd>${w.title} · ${w.color}</dd></div>
+   <div><dt>Повреждение</dt><dd>${w.damage}</dd></div>
+   <div><dt>Работы</dt><dd>${w.works}</dd></div>
+   <div><dt>Результат</dt><dd>${w.result}</dd></div></dl></div></button>`).join('');
+$$('.case').forEach(c=>c.addEventListener('click',()=>{showBA(+c.dataset.i);const r=baStage.getBoundingClientRect();if(r.top<0||r.top>innerHeight*.6)baStage.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}));
+showBA(0,false);
+// intro sweep once
+let baDemo=false;
+new IntersectionObserver((es,ob)=>{es.forEach(e=>{if(e.isIntersecting&&!baDemo&&!RM){baDemo=true;ob.disconnect();
+  const seq=[[50,28],[28,72],[72,50]];let k=0;const run=()=>{if(baStage.classList.contains('touched')||k>=seq.length)return;const [a,b]=seq[k++];const t0=performance.now();
+   const step=t=>{if(baStage.classList.contains('touched'))return;const p=Math.min(1,(t-t0)/700),e2=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;BA.set(a+(b-a)*e2);if(p<1)requestAnimationFrame(step);else setTimeout(run,120)};requestAnimationFrame(step)};
+  setTimeout(run,500)}})},{threshold:.5}).observe(baStage);
+
+/* ---------- calculator ---------- */
+// ПРЕДВАРИТЕЛЬНЫЕ ТАРИФЫ — заглушки. Замените на реальные вилки цен мастерской (₽, за типовой случай среднего размера).
+const PRICES={scratch:[6000,18000],dent:[7000,22000],bumper:[9000,26000],door:[14000,38000],fender:[12000,34000],hood:[15000,42000],crash:[45000,220000],other:[6000,30000]};
+const SIZE={s:[.7,'небольшое'],m:[1,'среднее'],l:[1.5,'крупное']};
+const PREMIUM=['audi','bmw','mercedes','mercedes-benz','lexus','infiniti','volvo','genesis','land rover','range rover','jaguar','cadillac','tesla','acura','lincoln','mini','zeekr','voyah','hongqi','li auto','lixiang'];
+const LUX=['porsche','maserati','bentley','rolls-royce','ferrari','lamborghini','aston martin','maybach','mclaren'];
+const BRANDS=['Audi','BMW','Mercedes-Benz','Lexus','Toyota','Kia','Hyundai','Volkswagen','Skoda','Porsche','Land Rover','Volvo','Nissan','Mazda','Haval','Chery','Geely','Exeed','Tank','Lada','Renault','Mitsubishi','Infiniti','Genesis','Zeekr','Li Auto','Tesla'];
+$('#brands').innerHTML=BRANDS.map(b=>`<option value="${b}">`).join('');
+const brandK=b=>{b=b.trim().toLowerCase();if(LUX.some(x=>b.includes(x)))return 1.7;if(PREMIUM.some(x=>b.includes(x)))return 1.3;return 1};
+const DMG=[['scratch','Царапины'],['dent','Вмятина'],['bumper','Повреждение бампера'],['door','Повреждение двери'],['fender','Повреждение крыла'],['hood','Повреждение капота'],['crash','ДТП'],['other','Другое']];
+const HINTS={scratch:['Полировка или локальная покраска','Подбор цвета по коду','Финишная полировка'],dent:['Рихтовка или вытягивание','Шпатлёвка и грунт при необходимости','Покраска элемента'],bumper:['Пайка трещин и креплений','Подготовка пластика','Покраска бампера'],door:['Ремонт или замена двери','Восстановление зазоров','Покраска и полировка'],fender:['Рихтовка крыла','Подготовка и грунт','Покраска с переходом на соседние детали'],hood:['Ремонт геометрии капота','Подбор цвета','Покраска и полировка'],crash:['Дефектовка и разборка','Кузовной ремонт и замена деталей','Покраска нескольких элементов'],other:['Осмотр и дефектовка','Подбор технологии ремонта','Согласование сметы']};
+const st={file:null,url:null,type:null,size:'m'};
+const chipsEl=$('#dmgChips');
+chipsEl.innerHTML=DMG.map(([k,l])=>`<button type="button" class="chip" data-k="${k}" aria-pressed="false">${l}</button>`).join('');
+function setType(k){st.type=k;$$('.chip',chipsEl).forEach(c=>c.setAttribute('aria-pressed',c.dataset.k===k?'true':'false'));chipsEl.classList.remove('bad');updBtn()}
+chipsEl.addEventListener('click',e=>{const c=e.target.closest('.chip');if(c)setType(c.dataset.k)});
+$$('#sizeSeg button').forEach(b=>b.onclick=()=>{st.size=b.dataset.v;$$('#sizeSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+const cBrand=$('#cBrand'),cModel=$('#cModel'),calcBtn=$('#calcBtn');
+const updBtn=()=>{calcBtn.disabled=false};
+cBrand.addEventListener('input',()=>cBrand.classList.remove('bad'));
+calcBtn.disabled=false;
+
+const drop=$('#drop'),fileIn=$('#calcFile');
+function setFile(f){
+  if(!f)return;
+  if(!/^image\//.test(f.type)){$('#resMeta').textContent='Нужен файл изображения: JPG, PNG или HEIC';return}
+  if(st.url)URL.revokeObjectURL(st.url);
+  st.file=f;st.url=URL.createObjectURL(f);
+  const img=$('#dropImg');img.src=st.url;img.hidden=false;$('#dropEmpty').hidden=true;$('#dropBar').hidden=false;$('#dropName').textContent=f.name||'Фото повреждения';
+  drop.classList.remove('scan');void drop.offsetWidth;drop.classList.add('scan');
+}
+fileIn.addEventListener('change',()=>setFile(fileIn.files[0]));
+$('#dropChange').addEventListener('click',e=>{e.preventDefault();fileIn.click()});
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];setFile(f)});
+
+const r500=n=>Math.round(n/500)*500;
+function countTo(el,to,dur=900){if(RM){el.textContent=rub(to);return}const t0=performance.now();const s=t=>{const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=rub(r500(to*e));if(p<1)requestAnimationFrame(s)};requestAnimationFrame(s)}
+let lastCalc=null;
+calcBtn.addEventListener('click',()=>{
+  let ok=true;
+  if(!st.type){chipsEl.classList.add('bad');ok=false}
+  if(!cBrand.value.trim()){cBrand.classList.add('bad');ok=false}
+  if(!ok){$('#resMeta').textContent=!st.type?'Выберите тип повреждения':'Укажите марку автомобиля';(!st.type?chipsEl:cBrand).scrollIntoView({behavior:'smooth',block:'center'});if(st.type)cBrand.focus();return}
+  const base=PRICES[st.type],k=SIZE[st.size][0]*brandK(cBrand.value);
+  const lo=r500(base[0]*k),hi=r500(base[1]*k);
+  const label=DMG.find(d=>d[0]===st.type)[1];
+  lastCalc={lo,hi,label,size:SIZE[st.size][1],car:(cBrand.value.trim()+' '+cModel.value.trim()).trim()};
+  const res=$('#result');res.classList.remove('ghost','live');void res.offsetWidth;res.classList.add('live');
+  $('#resMeta').textContent=`${label} · ${lastCalc.size} · ${lastCalc.car}`;
+  countTo($('#pLo'),lo);countTo($('#pHi'),hi,1100);
+  const ul=$('#resList');ul.innerHTML=HINTS[st.type].map(h=>`<li>${h}</li>`).join('')+(st.file?'<li>Фото прикреплено к заявке</li>':'');ul.hidden=false;
+  $('#exactBtn').hidden=false;
+  if(innerWidth<900)res.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
+});
+$('#exactBtn').addEventListener('click',()=>leadModal());
+
+/* ---------- modal / overlay ---------- */
+const ovRoot=$('#ovRoot');let ovOpen=null;
+function openOv(html,onKey){
+  closeOv();const ov=document.createElement('div');ov.className='ov';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.innerHTML=html;
+  ovRoot.appendChild(ov);document.body.style.overflow='hidden';
+  const prev=document.activeElement;
+  const key=e=>{if(e.key==='Escape')closeOv();else onKey&&onKey(e)};
+  addEventListener('keydown',key);
+  ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('[data-close]'))closeOv()});
+  ovOpen={ov,key,prev};hidePeek(true);
+  setTimeout(()=>{const f=$('input,button',ov);f&&f.focus({preventScroll:true})},60);
+  return ov;
+}
+function closeOv(){if(!ovOpen)return;removeEventListener('keydown',ovOpen.key);ovOpen.ov.remove();document.body.style.overflow='';ovOpen.prev&&ovOpen.prev.focus&&ovOpen.prev.focus({preventScroll:true});ovOpen=null}
+
+function fmtPhone(v){let d=v.replace(/\D/g,'');if(d.startsWith('8'))d='7'+d.slice(1);if(!d.startsWith('7'))d='7'+d;d=d.slice(0,11);
+  const p=d.slice(1);let o='+7';if(p.length)o+=' ('+p.slice(0,3);if(p.length>=3)o+=')';if(p.length>3)o+=' '+p.slice(3,6);if(p.length>6)o+='-'+p.slice(6,8);if(p.length>8)o+='-'+p.slice(8,10);return o}
+function bindPhone(el){el.addEventListener('input',()=>{el.value=fmtPhone(el.value);el.classList.remove('bad')});el.addEventListener('focus',()=>{if(!el.value)el.value='+7 '})}
+const phoneOk=v=>v.replace(/\D/g,'').length===11;
+const okView=(t,s)=>`<div class="ok"><div class="tick"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#5fd39a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h3>${t}</h3><p>${s}</p></div>`;
+
+function leadModal(){
+  const c=lastCalc;
+  const comment=c?`${c.label}, ${c.size}. Авто: ${c.car}. Предварительно: ${rub(c.lo)} – ${rub(c.hi)}.`:'';
+  const ov=openOv(`<div class="modal">
+    <button class="icon-btn" data-close aria-label="Закрыть" style="position:absolute;top:14px;right:14px">✕</button>
+    <span class="eyebrow">Точный расчёт</span>
+    <h3 style="margin-top:12px">Получить точный расчёт</h3>
+    <p style="color:var(--mute);font-size:14.5px">Мастер посмотрит фото и свяжется с вами, чтобы уточнить детали и время осмотра.</p>
+    <form id="leadForm" novalidate>
+      <div class="field"><label for="lName">Имя</label><input class="inp" id="lName" autocomplete="name" placeholder="Как к вам обращаться"></div>
+      <div class="field"><label for="lPhone">Телефон</label><input class="inp" id="lPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"></div>
+      <div class="field"><label for="lCom">Комментарий</label><textarea class="inp" id="lCom" placeholder="Что случилось с автомобилем">${comment}</textarea></div>
+      <div class="attach" id="lAttach"></div>
+      <input type="file" id="lFile" accept="image/*" class="sr">
+      <button class="btn btn-block" type="submit">Отправить заявку <span class="arr">→</span></button>
+      <p class="note" id="lMsg" aria-live="polite"></p>
+    </form></div>`);
+  const att=()=>{$('#lAttach',ov).innerHTML=st.url?`<img src="${st.url}" alt="Прикреплённое фото"><span>${(st.file&&st.file.name)||'Фото повреждения'}</span><button type="button" class="linkbtn" id="lChg">Заменить</button>`:`<div class="ph">＋</div><span>Фото не прикреплено</span><button type="button" class="linkbtn" id="lChg">Прикрепить</button>`;$('#lChg',ov).onclick=()=>$('#lFile',ov).click()};
+  att();$('#lFile',ov).addEventListener('change',e=>{setFile(e.target.files[0]);att()});
+  bindPhone($('#lPhone',ov));
+  $('#leadForm',ov).addEventListener('submit',e=>{e.preventDefault();
+    const n=$('#lName',ov),p=$('#lPhone',ov);let bad=[];
+    if(!n.value.trim()){n.classList.add('bad');bad.push('имя')}
+    if(!phoneOk(p.value)){p.classList.add('bad');bad.push('телефон полностью')}
+    if(bad.length){$('#lMsg',ov).textContent='Укажите '+bad.join(' и ');return}
+    // TODO: подключить отправку заявки (CRM, Telegram-бот или почта)
+    $('.modal',ov).innerHTML=`<button class="icon-btn" data-close aria-label="Закрыть" style="position:absolute;top:14px;right:14px">✕</button>`+okView('Заявка принята','Мастер свяжется с вами по номеру '+p.value+', чтобы уточнить детали ремонта.')+`<button class="btn btn-ghost btn-block" data-close>Готово</button>`;
+  });
+  $('#lName',ov).addEventListener('input',e=>e.target.classList.remove('bad'));
+}
+
+function goUpload(){
+  closePanel();hidePeek(true);endWalk();
+  document.getElementById('calc').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+  fileIn.click();
+}
+$('#ctaBtn').addEventListener('click',goUpload);
+
+/* ---------- services ---------- */
+const IC={
+ body:'<path d="M3 15.5l1.8-4.6A2 2 0 0 1 6.7 9.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6V18H3z"/><path d="M3 15.5h18"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/><path d="M8 9.6l1.2-3h5.6l1.2 3"/>',
+ spray:'<path d="M4 9h9v5H4z"/><path d="M13 10.5h3.5"/><path d="M6 14v6h3v-6"/><path d="M7 9V6h4v3"/><path d="M19 9l2-1.2M19.5 11.5h2.3M19 14l2 1.2"/>',
+ local:'<circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.6"/><path d="M12 2.5v3.5M12 18v3.5M2.5 12H6M18 12h3.5"/>',
+ bumper:'<path d="M3 10q9-4.5 18 0v4.5q-9 3.5-18 0z"/><path d="M7 13h10"/><path d="M12 8.4l-1 2.4 2 1-1 2"/>',
+ dent:'<path d="M3 7h18M3 17h18"/><path d="M5 12h3q4 5 8 0h3"/>',
+ crash:'<path d="M12 3l2 4.8 5-1.4-2.8 4.3L20.5 13l-5.2.4L14 19l-2-4.2L10 19l-1.3-5.6L3.5 13l4.3-2.3L5 6.4l5 1.4z"/>',
+ polish:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16"/><path d="M12 8a4 4 0 0 1 0 8"/><path d="M4 4l2 2M18 18l2 2"/>',
+ color:'<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2s-1-1.6-1-2.6S14 15 15.6 15H18a3 3 0 0 0 3-3 9 9 0 0 0-9-9z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/>'
+};
+const SVC=[
+ ['body','Кузовной ремонт','Восстанавливаем геометрию и детали кузова после повреждений.','door'],
+ ['spray','Покраска автомобиля','Полная или частичная окраска в покрасочной камере.','other'],
+ ['local','Локальная покраска','Точечный ремонт ЛКП без перекраски всей детали.','scratch'],
+ ['bumper','Ремонт бамперов','Пайка трещин, восстановление креплений и покраска.','bumper'],
+ ['dent','Устранение вмятин','Рихтовка и вытягивание с сохранением металла.','dent'],
+ ['crash','Восстановление после ДТП','Комплексный ремонт: от дефектовки до выдачи автомобиля.','crash'],
+ ['polish','Полировка','Убираем риски и голограммы, возвращаем глубину цвета.','scratch'],
+ ['color','Подбор цвета','Колеровка по коду краски и пробным выкрасам.','other']
+];
+$('#svc').innerHTML=SVC.map(s=>`<a class="scard" href="#calc" data-k="${s[3]}"><span class="go">↗</span><span class="ico"><svg viewBox="0 0 24 24">${IC[s[0]]}</svg></span><div><h3>${s[1]}</h3><p>${s[2]}</p></div></a>`).join('');
+$$('.scard').forEach(c=>{
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')});
+  c.addEventListener('click',()=>setType(c.dataset.k));
+});
+
+/* ---------- gallery ---------- */
+const gal=$('#gal');
+gal.style.gridAutoFlow='dense';
+gal.innerHTML=GALLERY.map((w,i)=>{
+  const isBA=!!w.dmg;
+  const media=isBA?`<div class="ba-layer">${scene(w,'before')}</div><div class="ba-layer" style="clip-path:polygon(56% 0,100% 0,100% 100%,44% 100%)">${scene(w,'after')}</div><span class="ba-tag">ДО / ПОСЛЕ</span>`:scene(w,'after');
+  return `<button class="tile${w.big?' big':''}${w.wide?' wide':''}" type="button" data-i="${i}" data-c="${w.cats.join(' ')}${isBA?' ':''}" aria-label="Открыть: ${w.title}, ${w.color}">${media}
+   <span class="tile-cap"><span><b>${w.title}</b><span>${w.img?w.color:w.cats.filter(c=>c!=='ba').map(c=>CAT[c]).join(' · ')}</span></span><em aria-hidden="true">↗</em></span></button>`}).join('');
+let filt='all';
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filt=b.dataset.f;
+  $$('#filters .chip').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  $$('.tile',gal).forEach(t=>{const on=filt==='all'||t.dataset.c.split(' ').includes(filt);
+    if(on){if(t.classList.contains('out')){t.classList.remove('out');if(!RM)t.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:500,easing:'cubic-bezier(.16,.84,.24,1)'})}}
+    else t.classList.add('out')});
+});
+const visTiles=()=>$$('.tile',gal).filter(t=>!t.classList.contains('out'));
+function lightbox(i){
+  const w=GALLERY[i];const isBA=!!w.dmg;
+  const stage=isBA?`<div class="ba-stage" style="--pos:50%"><div class="ba-layer">${scene(w,'before')}</div><div class="ba-layer ba-after">${scene(w,'after')}</div><span class="ba-label l glass">ДО</span><span class="ba-label r">ПОСЛЕ</span><div class="ba-handle"><div class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></div></div><input class="ba-range" type="range" min="0" max="100" value="50" step="0.1" aria-label="Граница до и после"></div>`
+    :`<div class="ba-stage"><div class="ba-layer">${scene(w,'after')}</div></div>`;
+  const nav=k=>{const v=visTiles();const pos=v.findIndex(t=>+t.dataset.i===i);const nx=v[(pos+k+v.length)%v.length];lightbox(+nx.dataset.i)};
+  const ov=openOv(`<button class="icon-btn ov-close" data-close aria-label="Закрыть">✕</button><div class="lb">${stage}
+    <div class="lb-bar"><div><h3>${w.title} · ${w.color}</h3><p>${w.damage?w.damage+' → '+w.result:(w.img?'Фото из мастерской':w.cats.map(c=>CAT[c]).join(' · '))}</p></div>
+    <div class="lb-nav"><button class="icon-btn" data-k="-1" aria-label="Предыдущая работа">←</button><button class="icon-btn" data-k="1" aria-label="Следующая работа">→</button></div></div></div>`,
+    e=>{if(e.key==='ArrowRight')nav(1);if(e.key==='ArrowLeft'&&!e.target.classList.contains('ba-range'))nav(-1)});
+  const st2=$('.ba-stage',ov);
+  if(isBA)bindBA(st2);
+  $$('.lb-nav [data-k]',ov).forEach(b=>b.onclick=()=>nav(+b.dataset.k));
+  let sx=null;$('.lb',ov).addEventListener('touchstart',e=>{if(!e.target.classList.contains('ba-range'))sx=e.touches[0].clientX},{passive:true});
+  $('.lb',ov).addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>60)nav(dx<0?1:-1)});
+}
+gal.addEventListener('click',e=>{const t=e.target.closest('.tile');if(t)lightbox(+t.dataset.i)});
+
+/* ---------- process ---------- */
+const proc=$('#proc'),steps=$$('.pstep',proc),rail=$('.proc-rail',proc);
+function updProc(){const r=proc.getBoundingClientRect();const p=Math.max(0,Math.min(1,(innerHeight*.78-r.top)/(r.height*.95)));rail.style.setProperty('--p',(p*100)+'%');steps.forEach((s,i)=>s.classList.toggle('on',p>=i/steps.length+.02))}
+
+/* ---------- reviews ---------- */
+const RV=[
+ ['Отзыв о ремонте бампера: сроки, совпадение цвета, общение с мастером.'],
+ ['Отзыв о восстановлении после ДТП: как проходил ремонт и фотоотчёт.'],
+ ['Отзыв о локальной покраске: результат и впечатление от мастерской.'],
+ ['Отзыв о полировке: состояние кузова до и после.'],
+ ['Отзыв о полной покраске: качество, сроки, рекомендация друзьям.']
+];
+$('#rvTrack').innerHTML=RV.map((r,i)=>`<article class="rv"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div class="stars" aria-label="Оценка: укажите реальную">★★★★★</div><span class="ph-chip">ЗАГЛУШКА</span></div>
+ <q>[${r[0]}]</q><div class="who"><span class="av">${String(i+1).padStart(2,'0')}</span><div><b>[Имя клиента]</b><span>[Марка и модель автомобиля]</span></div></div></article>`).join('');
+const rvT=$('#rvTrack');const rvStep=()=>{const c=$('.rv',rvT);return c?c.getBoundingClientRect().width+14:300};
+$('#rvNext').onclick=()=>rvT.scrollBy({left:rvStep(),behavior:'smooth'});$('#rvPrev').onclick=()=>rvT.scrollBy({left:-rvStep(),behavior:'smooth'});
+
+/* ---------- contact form ---------- */
+bindPhone($('#fPhone'));
+$('#fFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const t=$('#fFileT');t.textContent=f.name||'Фото прикреплено';const old=$('.fileinp img');old&&old.remove();const im=new Image();im.src=URL.createObjectURL(f);im.alt='';$('.fileinp').insertBefore(im,t)});
+$('#cForm').addEventListener('submit',e=>{e.preventDefault();const n=$('#fName'),p=$('#fPhone');const bad=[];
+  if(!n.value.trim()){n.classList.add('bad');bad.push('имя')}if(!phoneOk(p.value)){p.classList.add('bad');bad.push('телефон полностью')}
+  if(bad.length){$('#cFormMsg').textContent='Укажите '+bad.join(' и ');return}
+  // TODO: подключить отправку заявки (CRM, Telegram-бот или почта)
+  $('#cForm').innerHTML=`<div class="full">${okView('Заявка отправлена','Спасибо, '+n.value.trim()+'! Мастер перезвонит по номеру '+p.value+' и предложит время осмотра.')}</div>`;
+});
+$('#fName').addEventListener('input',e=>e.target.classList.remove('bad'));
+
+/* copy */
+$$('.copy').forEach(b=>b.addEventListener('click',()=>{const t=$('#'+b.dataset.copy).textContent;const done=()=>{b.textContent='Скопировано';setTimeout(()=>b.textContent='Копировать',1600)};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>{const r=document.createRange();r.selectNodeContents($('#'+b.dataset.copy));getSelection().removeAllRanges();getSelection().addRange(r)});}));
+
+/* ---------- MAP ---------- */
+const msvg=$('#mapSvg'),mbox=$('#mapbox'),mcard=$('#mapCard');
+function ring(base,sx,sy,amps,n=56,from=0,to=Math.PI*2,closed=true){const p=[];const cnt=closed?n:n+1;for(let i=0;i<cnt;i++){const t=from+(to-from)*i/n;let k=1;amps.forEach(([a,f,ph])=>k+=a*Math.sin(f*t+ph));p.push([C[0]+Math.cos(t)*base*sx*k,C[1]+Math.sin(t)*base*sy*k])}return smooth(p,closed)}
+const PJ=(la,lo)=>[500+(lo-37.6175)*1125.6,400+(55.752-la)*2000];
+const C=PJ(55.752,37.6175),MK=PJ(55.8650,37.5500);
+const geo=a=>a.map(([la,lo])=>PJ(la,lo));
+const GEO={
+ mkad:[[55.9080,37.5440],[55.9110,37.5870],[55.9080,37.6400],[55.8955,37.7000],[55.8830,37.7500],[55.8620,37.8300],[55.8350,37.8400],[55.8110,37.8420],[55.7750,37.8430],[55.7400,37.8410],[55.7080,37.8340],[55.6830,37.8170],[55.6550,37.7980],[55.6350,37.7820],[55.6100,37.7550],[55.5920,37.7290],[55.5800,37.6800],[55.5740,37.6300],[55.5780,37.5980],[55.5880,37.5420],[55.6110,37.4950],[55.6406,37.4597],[55.6600,37.4250],[55.6900,37.3980],[55.7140,37.3850],[55.7380,37.3730],[55.7600,37.3700],[55.7850,37.3720],[55.8100,37.3880],[55.8320,37.4050],[55.8550,37.4170],[55.8830,37.4430],[55.8990,37.4880]],
+ garden:[[55.7720,37.6320],[55.7680,37.6480],[55.7570,37.6560],[55.7420,37.6530],[55.7310,37.6360],[55.7270,37.6240],[55.7290,37.6060],[55.7350,37.5940],[55.7490,37.5830],[55.7610,37.5840],[55.7700,37.5960],[55.7740,37.6130]],
+ ttk:[[55.7940,37.5900],[55.7970,37.6330],[55.7850,37.6800],[55.7580,37.7020],[55.7330,37.6900],[55.7120,37.6750],[55.7060,37.6420],[55.7050,37.6200],[55.7070,37.5860],[55.7230,37.5530],[55.7490,37.5430],[55.7620,37.5350],[55.7780,37.5550]],
+ mck:[[55.8470,37.5510],[55.8470,37.5920],[55.8460,37.6400],[55.8390,37.6680],[55.8290,37.7010],[55.8030,37.7460],[55.7880,37.7430],[55.7580,37.7490],[55.7410,37.7340],[55.7240,37.7160],[55.7190,37.6970],[55.7060,37.6640],[55.6980,37.6480],[55.6900,37.6200],[55.6900,37.6050],[55.7070,37.5850],[55.7200,37.5630],[55.7400,37.5330],[55.7580,37.5250],[55.7770,37.5070],[55.7870,37.5040],[55.7990,37.4990],[55.8140,37.4870],[55.8260,37.4960],[55.8390,37.5200]],
+ blvd:[[55.7440,37.6040],[55.7520,37.6010],[55.7600,37.6000],[55.7650,37.6050],[55.7680,37.6220],[55.7640,37.6390],[55.7580,37.6450],[55.7490,37.6460]],
+ river:[[55.7930,37.3600],[55.8000,37.3800],[55.8120,37.4000],[55.8170,37.4280],[55.8080,37.4480],[55.7950,37.4400],[55.7820,37.4250],[55.7760,37.4450],[55.7790,37.4680],[55.7900,37.4800],[55.7860,37.5000],[55.7700,37.4970],[55.7570,37.5000],[55.7500,37.5200],[55.7490,37.5380],[55.7440,37.5600],[55.7350,37.5560],[55.7220,37.5480],[55.7120,37.5550],[55.7120,37.5750],[55.7230,37.5820],[55.7330,37.5930],[55.7430,37.6080],[55.7480,37.6170],[55.7470,37.6330],[55.7400,37.6480],[55.7280,37.6520],[55.7120,37.6600],[55.7000,37.6680],[55.6850,37.6500],[55.6720,37.6600],[55.6680,37.6850],[55.6800,37.7050],[55.6780,37.7350],[55.6600,37.7600],[55.6400,37.7700],[55.6300,37.8000],[55.6200,37.8300],[55.6150,37.8600]],
+ yauza:[[55.8800,37.7100],[55.8700,37.7000],[55.8450,37.6700],[55.8150,37.6800],[55.7900,37.6900],[55.7700,37.6900],[55.7580,37.6780],[55.7500,37.6550],[55.7480,37.6450]],
+ roads:[
+  [[55.7700,37.5960],[55.7770,37.5830],[55.8000,37.5350],[55.8100,37.5130],[55.8300,37.4930],[55.8550,37.4750],[55.8830,37.4430]],
+  [[55.7740,37.6130],[55.7950,37.5900],[55.8150,37.5780],[55.8450,37.5650],[55.8650,37.5500],[55.8880,37.5470],[55.9080,37.5440]],
+  [[55.8180,37.6000],[55.8400,37.5900],[55.8600,37.5850],[55.8850,37.5860],[55.9110,37.5870]],
+  [[55.7720,37.6320],[55.7950,37.6350],[55.8200,37.6400],[55.8450,37.6600],[55.8700,37.6800],[55.8955,37.7000]],
+  [[55.7680,37.6600],[55.7880,37.6900],[55.7970,37.7150],[55.8080,37.7800],[55.8110,37.8420]],
+  [[55.7570,37.6560],[55.7500,37.7000],[55.7550,37.7400],[55.7650,37.7900],[55.7750,37.8430]],
+  [[55.7420,37.6530],[55.7300,37.6900],[55.7180,37.7400],[55.7100,37.7900],[55.7080,37.8340]],
+  [[55.7380,37.6620],[55.7250,37.6800],[55.7050,37.7300],[55.6950,37.7750],[55.6830,37.8170]],
+  [[55.7270,37.6240],[55.7050,37.6350],[55.6800,37.6500],[55.6500,37.6800],[55.6200,37.7050],[55.5920,37.7290]],
+  [[55.7270,37.6240],[55.7050,37.6220],[55.6800,37.6200],[55.6500,37.6180],[55.6150,37.6050],[55.5780,37.5980]],
+  [[55.7050,37.5900],[55.6800,37.5650],[55.6500,37.5400],[55.6200,37.5050],[55.6110,37.4950]],
+  [[55.7350,37.5940],[55.7100,37.5800],[55.6900,37.5550],[55.6700,37.5200],[55.6550,37.4900],[55.6406,37.4597]],
+  [[55.7100,37.5450],[55.6900,37.5300],[55.6680,37.5000],[55.6600,37.4250]],
+  [[55.7490,37.5830],[55.7450,37.5600],[55.7400,37.5200],[55.7350,37.4800],[55.7250,37.4300],[55.7140,37.3850]],
+  [[55.7490,37.5400],[55.7550,37.4800],[55.7600,37.4200],[55.7600,37.3700]],
+  [[55.8100,37.5130],[55.8180,37.4700],[55.8260,37.4400],[55.8320,37.4050]],
+  [[55.7650,37.5600],[55.7750,37.5200],[55.7800,37.4800],[55.7850,37.4500]]
+ ],
+ parks:[[55.8650,37.7600,.028,.055],[55.8000,37.6720,.010,.018],[55.7750,37.7750,.014,.035],[55.6100,37.5500,.024,.028],[55.6950,37.7850,.014,.028],[55.6150,37.6800,.011,.018],[55.6670,37.6720,.009,.013],[55.8350,37.6100,.014,.026],[55.8200,37.5550,.011,.018],[55.7800,37.4200,.007,.018],[55.7550,37.4900,.007,.013],[55.7200,37.5850,.009,.010],[55.7080,37.5480,.005,.018],[55.8180,37.4650,.009,.014],[55.6400,37.4750,.011,.018],[55.8350,37.4400,.008,.013],[55.6550,37.6050,.007,.012]],
+ labels:[[55.8450,37.4300,'ТУШИНО'],[55.8700,37.6150,'ОТРАДНОЕ'],[55.7920,37.7950,'ИЗМАЙЛОВО'],[55.6800,37.7650,'ЛЮБЛИНО'],[55.6150,37.6100,'ЧЕРТАНОВО'],[55.6280,37.5050,'ТЁПЛЫЙ СТАН'],[55.6850,37.4500,'ОЧАКОВО'],[55.7620,37.4150,'КРЫЛАТСКОЕ'],[55.7780,37.4950,'ХОРОШЁВО'],[55.7600,37.7150,'ЛЕФОРТОВО'],[55.8000,37.6400,'МАРЬИНА РОЩА'],[55.7250,37.7150,'ТЕКСТИЛЬЩИКИ'],[55.6600,37.5500,'ЧЕРЁМУШКИ'],[55.8870,37.5050,'БЕСКУДНИКОВО']]
+};
+(function buildMap(){
+  const r=rng(42);
+  const mk=geo(GEO.mkad),mkD=smooth(mk);
+  let streets='';const cx=C[0],cy=C[1];
+  for(let i=0;i<1500;i++){const x=100+r()*780,y=-20+r()*860;const a=Math.atan2(y-cy,x-cx);const ang=r()>.5?a:a+Math.PI/2,L=6+r()*22;
+    streets+=`<line x1="${f1(x)}" y1="${f1(y)}" x2="${f1(x+Math.cos(ang)*L)}" y2="${f1(y+Math.sin(ang)*L)}"/>`}
+  const parks=GEO.parks.map(([la,lo,dla,dlo])=>{const [x,y]=PJ(la,lo);return `<path d="${blob(x,y,dlo*1125.6,dla*2000,10,.35,r)}"/>`}).join('');
+  const ext=(pts,n=170)=>{const a=pts[pts.length-2],b=pts[pts.length-1],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1;return [...pts,[b[0]+dx/L*n*.5+(r()-.5)*20,b[1]+dy/L*n*.5+(r()-.5)*20],[b[0]+dx/L*n,b[1]+dy/L*n]]};
+  const extBoth=p=>ext(ext(p).reverse()).reverse();
+  const roads=GEO.roads.map(p=>`<path d="${smooth(ext(geo(p)),false)}"/>`).join('');
+  const river=smooth(extBoth(geo(GEO.river)),false),yauza=smooth(geo(GEO.yauza),false);
+  const labels=GEO.labels.map(([la,lo,t])=>{const [x,y]=PJ(la,lo);return `<text x="${f1(x)}" y="${f1(y)}" text-anchor="middle">${t}</text>`}).join('');
+  const kp=(la,lo)=>PJ(la,lo).map(f1).join(' ');
+  msvg.innerHTML=`
+   <defs><pattern id="mDots" width="14" height="14" patternUnits="userSpaceOnUse"><circle class="m-dot" cx="1" cy="1" r="1" fill="#fff" fill-opacity=".045"/></pattern>
+   <radialGradient id="mFadeG" gradientUnits="userSpaceOnUse" cx="500" cy="420" r="560" gradientTransform="translate(500 420) scale(.8 1) translate(-500 -420)"><stop offset=".58" stop-color="#fff"/><stop offset=".8" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+   <mask id="mFade" maskUnits="userSpaceOnUse" x="-1000" y="-1000" width="3000" height="2800"><rect x="-1000" y="-1000" width="3000" height="2800" fill="url(#mFadeG)"/></mask>
+   <radialGradient id="mVig" cx=".5" cy=".5" r=".7"><stop offset=".55" style="stop-color:var(--map-bg)" stop-opacity="0"/><stop offset="1" style="stop-color:var(--map-bg)" stop-opacity=".9"/></radialGradient></defs>
+   <g id="mWorld">
+    <rect class="m-bg" x="-1000" y="-1000" width="3000" height="2800" fill="#0b0d10"/>
+    <g mask="url(#mFade)">
+     <rect x="-1000" y="-1000" width="3000" height="2800" class="m-city" fill="#11151a"/>
+     <rect x="-1000" y="-1000" width="3000" height="2800" fill="url(#mDots)"/>
+     <g class="m-park" fill="#9fbfa6" fill-opacity=".07">${parks}</g>
+     <g class="m-street" stroke="#fff" stroke-opacity=".05" stroke-width="1">${streets}</g>
+     <path class="m-ring" d="${smooth(geo(GEO.mck))}" fill="none" stroke="#c7cdd5" stroke-opacity=".22" stroke-width="1.4" stroke-dasharray="6 4"/>
+     <g class="m-road" fill="none" stroke="#2a3038" stroke-width="2.4" stroke-linecap="round">${roads}</g>
+     <path class="m-river" d="${river}" fill="none" stroke="#1a2735" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path class="m-river2" d="${river}" fill="none" stroke="#2c4157" stroke-width="1.6"/>
+     <path class="m-river" d="${yauza}" fill="none" stroke="#1a2735" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+    <path d="${mkD}" class="m-ring" fill="none" stroke="#c7cdd5" stroke-opacity=".45" stroke-width="3.2"/>
+    <path d="${smooth(geo(GEO.ttk))}" class="m-ring" fill="none" stroke="#c7cdd5" stroke-opacity=".32" stroke-width="2.2"/>
+    <path d="${smooth(geo(GEO.garden))}" class="m-ring" fill="none" stroke="#c7cdd5" stroke-opacity=".3" stroke-width="2"/>
+    <path d="${smooth(geo(GEO.blvd),false)}" class="m-ring" fill="none" stroke="#c7cdd5" stroke-opacity=".22" stroke-width="1.3"/>
+    <path d="M${kp(55.7535,37.6110)} L${kp(55.7510,37.6230)} L${kp(55.7490,37.6150)} Z" class="m-kr" fill="#c7cdd5" fill-opacity=".55"/>
+    <g class="m-label" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#8f96a0" letter-spacing="1.4" opacity=".85">${labels}</g>
+    <g class="m-label" font-family="JetBrains Mono, monospace" font-size="10" fill="#8f96a0" letter-spacing="2">
+     <text x="${f1(PJ(55.918,37.62)[0])}" y="${f1(PJ(55.918,37.62)[1])}" text-anchor="middle">МКАД</text>
+     <text x="${f1(PJ(55.776,37.704)[0])}" y="${f1(PJ(55.776,37.704)[1])}" font-size="8">ТТК</text>
+     <text x="${f1(PJ(55.776,37.598)[0])}" y="${f1(PJ(55.776,37.598)[1])}" font-size="7" text-anchor="middle">САДОВОЕ</text>
+     <text x="${f1(PJ(55.850,37.640)[0])}" y="${f1(PJ(55.850,37.640)[1])}" font-size="7">МЦК</text>
+     <text x="${f1(C[0]+8)}" y="${f1(C[1]+14)}" font-size="6.5">КРЕМЛЬ</text>
+     <text x="${f1(PJ(55.705,37.556)[0])}" y="${f1(PJ(55.705,37.556)[1])}" font-size="7" style="fill:var(--map-river2)" transform="rotate(-20 ${f1(PJ(55.705,37.556)[0])} ${f1(PJ(55.705,37.556)[1])})">МОСКВА-РЕКА</text>
+     <text x="${f1(MK[0]+16)}" y="${f1(MK[1]+16)}" font-size="7.5" style="fill:var(--amber-t)">М СЕЛИГЕРСКАЯ</text>
+    </g>
+    <g class="marker" id="marker" tabindex="0" role="button" aria-label="Rebuild Coloring Workshop — показать карточку" transform="translate(${MK[0]} ${MK[1]})">
+     <g id="mScale"><circle class="pulse" r="16" fill="#c935e0" fill-opacity=".35"/><circle r="5" fill="#c935e0"/>
+      <g class="pin"><path d="M0 -6 C-10 -18 -16 -24 -16 -34 a16 16 0 1 1 32 0 c0 10 -6 16 -16 28z" fill="#c935e0" stroke="#ffffff" stroke-width="1.5"/><circle cy="-34" r="10" fill="#ffffff"/><text y="-30" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="800" font-size="11" fill="#c935e0">R</text></g>
+     </g>
+    </g>
+   </g>
+   <rect x="-1000" y="-1000" width="3000" height="2800" fill="url(#mVig)" pointer-events="none" id="mVigR"/>`;
+})();
+
+let vb={x:0,y:0,w:1000,h:800};
+const mScale=$('#mScale'),marker=$('#marker');
+function setVB(v){vb=v;msvg.setAttribute('viewBox',`${f1(v.x)} ${f1(v.y)} ${f1(v.w)} ${f1(v.h)}`);
+  mScale.setAttribute('transform',`scale(${f1(Math.max(.45,Math.min(1.4,v.w/900))*100)/100})`);
+  const vg=$('#mVigR');vg.setAttribute('x',v.x);vg.setAttribute('y',v.y);vg.setAttribute('width',v.w);vg.setAttribute('height',v.h);
+  placeCard()}
+function placeCard(){const pr=$('.pin',marker).getBoundingClientRect(),br=mbox.getBoundingClientRect();
+  const cw=mcard.offsetWidth,ch=mcard.offsetHeight,pad=12,cx=pr.left+pr.width/2-br.left;
+  let top=pr.top-br.top-12-ch,below=false;
+  if(top<pad){top=pr.bottom-br.top+12;below=true}
+  top=Math.max(pad,Math.min(br.height-ch-pad,top));
+  const left=Math.max(pad,Math.min(br.width-cw-pad,cx-cw/2));
+  mcard.classList.toggle('below',below);mcard.style.left=left+'px';mcard.style.top=top+'px';
+  mcard.style.setProperty('--ax',Math.max(18,Math.min(cw-18,cx-left))+'px')}
+let tw=null;
+function tween(to,dur=1100){cancelAnimationFrame(tw);const from={...vb},t0=performance.now();if(RM){setVB(to);return}
+  const s=t=>{const p=Math.min(1,(t-t0)/dur),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;setVB({x:from.x+(to.x-from.x)*e,y:from.y+(to.y-from.y)*e,w:from.w+(to.w-from.w)*e,h:from.h+(to.h-from.h)*e});if(p<1)tw=requestAnimationFrame(s)};tw=requestAnimationFrame(s)}
+const zoomTo=(f,cx=vb.x+vb.w/2,cy=vb.y+vb.h/2)=>{const w=Math.max(240,Math.min(1300,vb.w*f)),h=w*.8;tween({x:cx-w/2,y:cy-h/2,w,h},500)};
+const home=()=>tween({x:MK[0]-230,y:MK[1]-230,w:460,h:368});
+$('#zIn').onclick=()=>zoomTo(.7);$('#zOut').onclick=()=>zoomTo(1.4);$('#zHome').onclick=()=>{home();setTimeout(()=>showCard(true),1150)};
+msvg.addEventListener('dblclick',e=>{const k=Math.max(vb.w/mbox.clientWidth,vb.h/mbox.clientHeight);const r=mbox.getBoundingClientRect();zoomTo(.6,vb.x+vb.w/2+(e.clientX-r.left-r.width/2)*k,vb.y+vb.h/2+(e.clientY-r.top-r.height/2)*k)});
+let drag=null;
+msvg.addEventListener('pointerdown',e=>{if(e.target.closest('.marker'))return;drag={x:e.clientX,y:e.clientY,v:{...vb},id:e.pointerId};mbox.classList.add('dragging')});
+msvg.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const k=Math.min(vb.w/mbox.clientWidth,vb.h/mbox.clientHeight);
+  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3&&!msvg.hasPointerCapture(e.pointerId)){try{msvg.setPointerCapture(e.pointerId)}catch(_){}}
+  cancelAnimationFrame(tw);setVB({...vb,x:Math.max(-300,Math.min(1300-vb.w,drag.v.x-dx*k)),y:Math.max(-300,Math.min(1100-vb.h,drag.v.y-dy*k))})});
+['pointerup','pointercancel'].forEach(ev=>msvg.addEventListener(ev,()=>{drag=null;mbox.classList.remove('dragging')}));
+let cardT=null;
+function showCard(on){clearTimeout(cardT);if(on){placeCard();mcard.classList.add('show')}else cardT=setTimeout(()=>mcard.classList.remove('show'),350)}
+marker.addEventListener('pointerenter',()=>showCard(true));marker.addEventListener('pointerleave',()=>showCard(false));
+marker.addEventListener('focus',()=>showCard(true));marker.addEventListener('blur',()=>showCard(false));
+marker.addEventListener('click',()=>showCard(!mcard.classList.contains('show')));
+marker.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showCard(true);$('a',mcard).focus()}});
+mcard.addEventListener('pointerenter',()=>clearTimeout(cardT));mcard.addEventListener('pointerleave',()=>showCard(false));
+addEventListener('resize',placeCard);
+setVB({x:-40,y:-20,w:1080,h:864});
+let mapFlown=false;
+new IntersectionObserver((es,ob)=>{es.forEach(e=>{if(e.isIntersecting&&!mapFlown){mapFlown=true;ob.disconnect();setTimeout(()=>{home();setTimeout(()=>showCard(true),1250);setTimeout(()=>{if(!marker.matches(':hover')&&!mcard.matches(':hover'))showCard(false)},5200)},250)}})},{threshold:.45}).observe(mbox);
+
+/* ---------- MECHANIC ---------- */
+function mechSVG(){
+  const u='m'+(++UID);
+  return `<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><linearGradient id="${u}mt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f5f7"/><stop offset=".55" stop-color="#9aa1a9"/><stop offset="1" stop-color="#dfe3e7"/></linearGradient>
+  <linearGradient id="${u}ov" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#363c45"/><stop offset="1" stop-color="#22262c"/></linearGradient></defs>
+  <ellipse cx="100" cy="242" rx="54" ry="6" fill="#000" opacity=".45"/>
+  <g class="legL"><rect x="77" y="184" width="20" height="46" rx="8" fill="url(#${u}ov)"/><rect x="68" y="222" width="32" height="16" rx="8" fill="#111317"/><rect x="70" y="231" width="28" height="3" rx="1.5" fill="#c935e0"/></g><g class="legR"><rect x="103" y="184" width="20" height="46" rx="8" fill="url(#${u}ov)"/><rect x="100" y="222" width="32" height="16" rx="8" fill="#111317"/><rect x="102" y="231" width="28" height="3" rx="1.5" fill="#c935e0"/></g>
+  <g class="bodyG">
+   <rect x="62" y="110" width="76" height="86" rx="26" fill="#d6dbe1"/>
+   <path d="M66 142 h68 v40 q0 14 -14 14 h-40 q-14 0 -14 -14z" fill="url(#${u}ov)"/>
+   <rect x="78" y="124" width="44" height="34" rx="7" fill="url(#${u}ov)"/>
+   <path d="M80 128 L70 113 M120 128 L130 113" stroke="#2c3138" stroke-width="7" stroke-linecap="round"/>
+   <circle cx="80" cy="130" r="2.6" fill="#c935e0"/><circle cx="120" cy="130" r="2.6" fill="#c935e0"/>
+   <rect x="92" y="133" width="16" height="16" rx="3" fill="#c935e0" transform="rotate(45 100 141)"/><path d="M96 141h8M100 137v8" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+   <rect x="66" y="166" width="68" height="5" fill="#16191d"/><rect x="96" y="165" width="8" height="7" rx="1.5" fill="url(#${u}mt)"/>
+   <path d="M110 176 h16 v10 h-16z" fill="none" stroke="#454c56" stroke-width="1.5"/><rect x="113" y="172" width="3" height="10" rx="1" fill="#c935e0"/>
+   <rect x="92" y="98" width="16" height="16" rx="4" fill="#e8b892"/>
+   <circle cx="66" cy="78" r="7" fill="#eebf99"/><circle cx="134" cy="78" r="7" fill="#eebf99"/>
+   <circle cx="100" cy="74" r="34" fill="#f2c9a5"/>
+   <path d="M67 72 q0 12 6 18 M133 72 q0 12 -6 18" stroke="#4a3426" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <ellipse cx="80" cy="92" rx="6" ry="4" fill="#f19c8a" opacity=".45"/><ellipse cx="120" cy="92" rx="6" ry="4" fill="#f19c8a" opacity=".45"/>
+   <g class="eyes"><ellipse cx="88" cy="79" rx="7" ry="8" fill="#fff"/><ellipse cx="112" cy="79" rx="7" ry="8" fill="#fff"/>
+    <g class="pupil" data-cx="88" data-cy="79"><circle cx="88" cy="80" r="3.8" fill="#101816"/><circle cx="89.3" cy="78.6" r="1.2" fill="#fff"/></g>
+    <g class="pupil" data-cx="112" data-cy="79"><circle cx="112" cy="80" r="3.8" fill="#101816"/><circle cx="113.3" cy="78.6" r="1.2" fill="#fff"/></g>
+    <g class="lids" style="transform:scaleY(0)"><ellipse cx="88" cy="79" rx="7.6" ry="8.6" fill="#f2c9a5"/><ellipse cx="112" cy="79" rx="7.6" ry="8.6" fill="#f2c9a5"/></g></g>
+   <path d="M81 68 q7 -5 14 -1 M105 67 q7 -4 14 1" stroke="#4a3426" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M100 84 q4 5 0 8" stroke="#d29a76" stroke-width="2" fill="none" stroke-linecap="round"/>
+   <path d="M88 97 q6 -5 12 -1 q6 -4 12 1 q-6 4 -12 0.5 q-6 3.5 -12 -0.5z" fill="#4a3426"/>
+   <path d="M93 102 q7 5 14 0" stroke="#8a4532" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+   <path d="M64 66 Q66 34 100 32 Q134 34 136 66 Z" fill="#c935e0"/>
+   <path d="M64 66 Q100 58 136 66 L136 70 Q100 62 64 70Z" fill="#8a22b8"/>
+   <path d="M118 64 Q146 58 160 68 Q146 74 120 71 Z" fill="#8a22b8"/>
+   <circle cx="100" cy="33" r="3.4" fill="#8a22b8"/>
+   <path d="M67 54 Q100 44 133 54" stroke="#1b1e23" stroke-width="5" fill="none"/>
+   <circle cx="88" cy="50" r="8" fill="#33475e" stroke="url(#${u}mt)" stroke-width="3"/><circle cx="112" cy="50" r="8" fill="#33475e" stroke="url(#${u}mt)" stroke-width="3"/>
+   <path d="M84 47 l4 -3 M108 47 l4 -3" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/>
+   <g class="armL">
+    <rect x="52" y="116" width="20" height="32" rx="10" fill="#d6dbe1"/>
+    <rect x="54" y="140" width="16" height="30" rx="8" fill="#f2c9a5"/>
+    <rect x="58" y="168" width="8" height="46" rx="4" fill="url(#${u}mt)"/>
+    <path d="M55 226 A9 9 0 1 1 69 226" stroke="url(#${u}mt)" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <circle cx="62" cy="172" r="10.5" fill="#22262c"/><rect x="52" y="160" width="20" height="5" rx="2.5" fill="#c935e0"/>
+   </g>
+   <g class="armR">
+    <rect x="128" y="116" width="20" height="32" rx="10" fill="#d6dbe1"/>
+    <rect x="130" y="140" width="16" height="30" rx="8" fill="#f2c9a5"/>
+    <path d="M141 138 h14 l-2 22 h-10z" fill="#c935e0"/><rect x="139" y="134" width="18" height="5" rx="2" fill="#8a22b8"/>
+    <rect x="128" y="160" width="44" height="12" rx="5" fill="url(#${u}mt)"/>
+    <rect x="170" y="162" width="10" height="8" rx="2" fill="#6f7680"/>
+    <rect x="134" y="170" width="9" height="20" rx="3" fill="#2c3138"/>
+    <circle cx="138" cy="174" r="10.5" fill="#22262c"/><rect x="128" y="160" width="20" height="5" rx="2.5" fill="#c935e0"/>
+    <g class="mist" fill="#c935e0"><circle cx="190" cy="166" r="4" opacity=".7"/><circle cx="200" cy="160" r="5" opacity=".5" fill="#1ec8ea"/><circle cx="202" cy="172" r="4" opacity=".45" fill="#9dff3b"/><circle cx="214" cy="164" r="6" opacity=".3"/><circle cx="212" cy="178" r="3.5" opacity=".3"/><circle cx="226" cy="168" r="7" opacity=".18"/></g>
+   </g>
+  </g></svg>`;
+}
+const PHRASES=['Покажешь, что случилось с машиной?','Царапина? Вмятина? Разберёмся.','Цвет подберём в тон, обещаю.','Загрузи фото, прикинем стоимость.','Бампер треснул? Это поправимо.'];
+const ACTIONS=['wave','raise','fix'];
+function act(m,name){if(RM)return;m.classList.remove(...ACTIONS);void m.offsetWidth;m.classList.add(name);clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove(name),1500)}
+
+const peek=$('#peek'),pm=$('#peekMech'),bub=$('#peekBubble'),panel=$('#mpanel');
+pm.innerHTML=mechSVG();$('#ctaMech').innerHTML=mechSVG();
+let dismissed=false,peekOn=false,peekHide=null,lastPeek=0,curSay='';
+const shown=new Set();
+function say(t){bub.textContent=t;bub.classList.add('show')}
+function showPeek(side,text){
+  if(dismissed||ovOpen)return;
+  const go=()=>{peek.classList.remove('left','right');peek.classList.add(side);void peek.offsetWidth;peek.classList.add('on');peekOn=true;curSay=text;
+    setTimeout(()=>{if(peekOn){say(text);act(pm,'wave')}},700);
+    clearTimeout(peekHide);peekHide=setTimeout(()=>{if(!peek.matches(':hover')&&panel.hidden)hidePeek()},7500)};
+  if(peekOn&&!peek.classList.contains(side)){hidePeek();setTimeout(go,700)}else go();
+  lastPeek=Date.now();
+}
+function hidePeek(){peek.classList.remove('on');bub.classList.remove('show');peekOn=false;clearTimeout(peekHide)}
+const SPOTS=[['#ba','right','Двигай ползунок, сравни до и после.'],['#calc','left','Покажешь, что случилось с машиной?'],['#services','right','Царапина, вмятина, бампер? Всё сделаем.'],['#works','left','Смотри, какими машины уезжают от нас.'],['#map','right','Заезжай в гости, покажем мастерскую.']];
+const spotIO=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const s=SPOTS.find(x=>e.target.matches(x[0]));if(!s||shown.has(s[0]))return;if(Date.now()-lastPeek<9000)return;shown.add(s[0]);showPeek(s[1],s[2])})},{threshold:.3});
+SPOTS.forEach(s=>spotIO.observe($(s[0])));
+pm.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){act(pm,ACTIONS[Math.floor(Math.random()*3)]);say(PHRASES[Math.floor(Math.random()*PHRASES.length)]);clearTimeout(peekHide)}});
+peek.addEventListener('pointerleave',()=>{clearTimeout(peekHide);peekHide=setTimeout(()=>{if(panel.hidden)hidePeek()},4000)});
+function openPanel(anchor){
+  panel.hidden=false;const r=anchor.getBoundingClientRect();const pw=Math.min(300,innerWidth-32);
+  let left=r.left+r.width/2-pw/2;left=Math.max(16,Math.min(innerWidth-pw-16,left));
+  panel.style.left=left+'px';panel.style.top='auto';panel.style.bottom=Math.max(16,innerHeight-r.top+12)+'px';
+  if(innerHeight-r.top+12+190>innerHeight){panel.style.bottom='auto';panel.style.top=Math.min(innerHeight-200,r.bottom+12)+'px'}
+  $('#mpUpload').focus({preventScroll:true});
+  pauseWalk(true);
+}
+function closePanel(){if(panel.hidden)return;panel.hidden=true;pauseWalk(false)}
+const mechClick=()=>{act(pm,'raise');bub.classList.remove('show');clearTimeout(peekHide);openPanel(pm)};
+pm.addEventListener('click',mechClick);pm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();mechClick()}});
+$('#mpUpload').onclick=goUpload;
+$('#mpLater').onclick=()=>{closePanel();hidePeek()};
+$('#mpSign').onclick=goSignup;
+$('#peekX').onclick=()=>{dismissed=true;closePanel();hidePeek();endWalk()};
+document.addEventListener('pointerdown',e=>{if(!panel.hidden&&!panel.contains(e.target)&&!e.target.closest('.mech'))closePanel()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)closePanel()});
+const cm=$('#ctaMech');
+cm.addEventListener('pointerenter',()=>act(cm,'wave'));
+cm.addEventListener('click',goUpload);cm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();goUpload()}});
+
+function goSignup(){closePanel();hidePeek();endWalk();
+  document.getElementById('contact').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+  setTimeout(()=>{const n=$('#fName');n&&n.focus({preventScroll:true})},RM?0:700)}
+
+/* hero mechanic */
+$('.hero-bottom > div').insertAdjacentHTML('afterbegin',`<div class="hero-mech"><div class="bubble glass" id="heroBubble"></div><div class="mech idle" id="heroMech" role="button" tabindex="0" aria-label="Механик Rebuild: записаться или оценить ремонт">${mechSVG()}</div></div>`);
+const hm=$('#heroMech'),hb=$('#heroBubble');let hbT=null;
+const hSay=(t,ms=3800)=>{hb.textContent=t;hb.classList.add('show');clearTimeout(hbT);hbT=setTimeout(()=>hb.classList.remove('show'),ms)};
+const HERO_PH=['Привет! Запишешься на ремонт?','Нажми на меня: оценим ремонт по фото или запишем на осмотр.','Ключ и краскопульт уже наготове.','Подкрасим, выправим, отполируем.'];
+if(!RM)setTimeout(()=>{if(scrollY<innerHeight*.5){act(hm,'wave');hSay(HERO_PH[0],4200)}},2900);
+setInterval(()=>{if(document.hidden||RM||scrollY>innerHeight||hm.matches(':hover')||!panel.hidden)return;act(hm,'fix')},7000);
+hm.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){act(hm,ACTIONS[Math.floor(Math.random()*3)]);hSay(HERO_PH[1+Math.floor(Math.random()*3)])}});
+const heroClick=()=>{act(hm,'raise');hb.classList.remove('show');openPanel(hm)};
+hm.addEventListener('click',heroClick);hm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();heroClick()}});
+
+/* walking mechanic */
+const walker=$('#walker'),wm=$('#walkMech'),wb=$('#walkBubble');wm.innerHTML=mechSVG();
+let walkAnim=null,walking=false,walkTimer=null;
+const WALK_PH=['Запишись на ремонт, подготовлю бокс!','Проверяю, всё ли блестит…','Есть царапина? Покажи фото.','Иду за краскопультом.'];
+function pauseWalk(on){if(!walkAnim)return;if(on){walkAnim.pause();wm.classList.remove('walking')}else if(walking&&!walker.matches(':hover')){walkAnim.play();wm.classList.add('walking')}}
+function endWalk(){if(walkAnim){walkAnim.cancel();walkAnim=null}walking=false;walker.hidden=true;wm.classList.remove('walking');wb.classList.remove('show')}
+async function walk(){
+  if(RM||dismissed||ovOpen||!panel.hidden||peekOn||document.hidden||walking||scrollY<innerHeight*.6)return;
+  walking=true;const W=innerWidth,size=walker.offsetWidth||84,dir=Math.random()>.5?1:-1;
+  walker.classList.toggle('flipX',dir<0);walker.hidden=false;
+  const a=dir>0?-size-20:W+20,b=dir>0?W+20:-size-20,mid=W*(.35+Math.random()*.3);
+  const speed=110,anim=(from,to)=>{walkAnim=walker.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:Math.abs(to-from)/speed*1000,easing:'linear',fill:'forwards'});return walkAnim.finished};
+  try{
+    wm.classList.add('walking');await anim(a,mid);if(!walking)return;
+    wm.classList.remove('walking');act(wm,'wave');wb.textContent=WALK_PH[Math.floor(Math.random()*WALK_PH.length)];wb.classList.add('show');
+    await new Promise(r=>setTimeout(r,2400));while(!panel.hidden||walker.matches(':hover'))await new Promise(r=>setTimeout(r,500));if(!walking)return;
+    wb.classList.remove('show');wm.classList.add('walking');await anim(mid,b);
+  }catch(_){}
+  endWalk();
+}
+function schedWalk(){clearTimeout(walkTimer);walkTimer=setTimeout(()=>{walk();schedWalk()},28000+Math.random()*20000)}
+if(!RM){setTimeout(()=>{walk();schedWalk()},16000)}
+walker.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){pauseWalk(true);act(wm,'raise');wb.textContent=WALK_PH[0];wb.classList.add('show')}});
+walker.addEventListener('pointerleave',()=>{if(panel.hidden){wb.classList.remove('show');pauseWalk(false)}});
+const walkClick=()=>{wb.classList.remove('show');openPanel(wm)};
+wm.addEventListener('click',walkClick);wm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();walkClick()}});
+
+// eyes follow cursor
+let mxy=null;addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;if(!mxy)requestAnimationFrame(look);mxy=[e.clientX,e.clientY]},{passive:true});
+function look(){if(!mxy)return;const [x,y]=mxy;mxy=null;
+  $$('.mech').forEach(m=>{const flip=(m.closest('.peek.left')||m.closest('.walker.flipX')||(m.matches('.cta-mech')&&innerWidth>800))?-1:1;$$('.pupil',m).forEach(p=>{const r=p.getBoundingClientRect();if(!r.width)return;const dx=x-(r.left+r.width/2),dy=y-(r.top+r.height/2),d=Math.hypot(dx,dy)||1,k=Math.min(3,d/60);
+   p.setAttribute('transform',`translate(${f1(dx/d*k*flip)} ${f1(dy/d*k)})`)})})}
+
+/* ---------- reveal ---------- */
+const RSEL='.sec-head,.ba-stage,.case,.calc,.pstep,.scard,.filters,.tile,.wcard,.mapbox,.contact-card,.rv,.cta,.cform aside,.cform form';
+if(!RM){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const el=e.target;io.unobserve(el);el.classList.remove('r-pre');el.classList.add('r-in');
+    const d=parseFloat(getComputedStyle(el).getPropertyValue('--d'))||0;setTimeout(()=>el.classList.remove('r-in'),950+d*1000)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  $$(RSEL).forEach(el=>{const idx=[...el.parentElement.children].filter(c=>c.matches(RSEL)).indexOf(el);el.style.setProperty('--d',((idx%4)*.08)+'s');
+    if(el.getBoundingClientRect().top>innerHeight*.95){el.classList.add('r-pre');io.observe(el)}});
+}
+
+/* ---------- scroll: nav, parallax, process ---------- */
+const heroCar=$('#heroCar'),h1=$('.hero h1'),heroPhoto=$('.hero-photo'),heroGlow=$('.hero-glow'),heroCap=$('.hero .hero-cap');let tick=false;
+function onScroll(){tick=false;const y=scrollY;nav.classList.toggle('solid',y>30);
+  
+  if(heroPhoto){const pr=heroPhoto.getBoundingClientRect(),navH=nav.offsetHeight||72;const o=Math.max(0,Math.min(1,1-(navH-pr.top)/(pr.height*.75)));heroPhoto.style.opacity=o.toFixed(3);heroPhoto.style.visibility=o<=0?'hidden':'';if(heroGlow){heroGlow.style.opacity=o<1?`calc(var(--glow-op) * ${o.toFixed(3)})`:''}if(heroCap){heroCap.style.opacity=o.toFixed(3);heroCap.style.visibility=o<=0?'hidden':''}}
+  updProc();if(mcard.classList.contains('show'))placeCard()}
+addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(onScroll)}},{passive:true});
+onScroll();
+})();
+</script>
+
+</body>
+</html>
